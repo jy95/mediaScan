@@ -1,0 +1,70 @@
+{
+  "name": "mediascan",
+  "version": "1.0.0",
+  "description": "A scanner for media files that follows a user-provided naming convention",
+  "main": "./lib/MediaScan.js",
+  "types": "./lib/MediaScan.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "test": "nyc ava",
+    "semantic-release": "semantic-release -e ./config/release.config.js",
+    "prepare": "npm run compile",
+    "compile": "tsc",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage-html": "nyc report --reporter=html"
+  },
+  "engines": {
+    "node": ">=6",
+    "npm": ">=5"
+  },
+  "keywords": [
+    "media files",
+    "media",
+    "media files scanner",
+    "naming convention",
+    "torrent",
+    "library",
+    "parser",
+    "torrent file",
+    "parse torrent",
+    "parse torrent file",
+    "parse torrent name"
+  ],
+  "author": "jy95",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jy95/mediaScan.git"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "filehound": "^1.16.2",
+    "lodash": "^4.17.5",
+    "parse-torrent-title": "^1.1.0",
+    "video-extensions": "^1.1.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^1.0.1",
+    "@semantic-release/git": "^3.0.1",
+    "@types/node": "^9.4.5",
+    "ava": "^0.25.0",
+    "conventional-changelog-eslint": "^1.0.2",
+    "nyc": "^11.4.1",
+    "semantic-release": "^12.4.1",
+    "sinon": "^4.3.0",
+    "typescript": "^2.7.1"
+  },
+  "greenkeeper": {
+    "commitMessages": {
+      "initialBadge": "Docs: Add Greenkeeper badge",
+      "initialDependencies": "Upgrade: Update dependencies",
+      "initialBranches": "Build: Whitelist greenkeeper branches",
+      "dependencyUpdate": "Upgrade: Update ${dependency} to version ${version}",
+      "devDependencyUpdate": "Upgrade: Update ${dependency} to version ${version}",
+      "dependencyPin": "Fix: Pin ${dependency} to ${oldVersion}",
+      "devDependencyPin": "Fix: Pin ${dependency} to ${oldVersion}"
+    }
+  }
+}

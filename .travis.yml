@@ -1,0 +1,29 @@
+language: node_js
+dist: trusty
+sudo: required
+cache:
+  directories:
+    - node_modules
+notifications:
+  slack:
+      on_success: change
+      on_failure: always
+node_js:
+  - 'node'
+  - '7'
+  - '6'
+os:
+  - linux
+before_install:
+  - npm i -g npm@latest
+  - npm i -g travis-deploy-once
+before_script:
+  - npm prune
+  # Just to have no problem with the test path to lib
+  - npm link
+after_success:
+  - npm run coverage
+  - travis-deploy-once && npx -p node@8 npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
