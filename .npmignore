@@ -1,2 +1,5 @@
 # uncompiled files
 src
+# jest unit test folders
+__mocks__
+__tests__

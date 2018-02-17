@@ -19,8 +19,6 @@ before_install:
   - npm i -g travis-deploy-once
 before_script:
   - npm prune
-  # Just to have no problem with the test path to lib
-  - npm link
 after_success:
   - npm run coverage
   - travis-deploy-once && npx -p node@8 npm run semantic-release
