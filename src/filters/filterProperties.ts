@@ -33,8 +33,8 @@ import * as MediaScan from "../custom_types";
  * @param {searchParameters} searchParameters - search parameters.
  * an object that contains mapped properties for search
  */
-function mapProperties(searchParameters: MediaScan.defaultSearchParameters | MediaScan.minimalSearchParameters): {
-    booleanFieldsSearchMap: Map<string, boolean>, numberFieldsSearchMap: Map<string, MediaScan.numberExpressionObject>,
+function mapProperties(searchParameters: MediaScan.SearchParameters): {
+    booleanFieldsSearchMap: Map<string, boolean>, numberFieldsSearchMap: Map<string, MediaScan.NumberExpressionObject>,
     stringFieldsSearchMap: Map<string, string | string[]> } {
 
     // organize search based on field type : boolean - string - number
@@ -52,13 +52,13 @@ function mapProperties(searchParameters: MediaScan.defaultSearchParameters | Med
     /* istanbul ignore else */
     if (additionalProperties !== undefined) {
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.additionalPropertiesType.BOOLEAN)
+            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.BOOLEAN)
             .forEach((newProperty) => {
                 booleanFieldsSearchMap.set(newProperty.name, newProperty.value as boolean);
             });
 
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.additionalPropertiesType.NUMBER)
+            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.NUMBER)
             .forEach((newProperty) => {
                 let expression = convertToValidExpression(newProperty.value as string|number);
                 /* istanbul ignore else */
@@ -68,7 +68,7 @@ function mapProperties(searchParameters: MediaScan.defaultSearchParameters | Med
             });
 
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.additionalPropertiesType.STRING)
+            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.STRING)
             .forEach((newProperty) => {
                 stringFieldsSearchMap.set(newProperty.name, [...newProperty.value]);
             });
@@ -82,7 +82,7 @@ function mapProperties(searchParameters: MediaScan.defaultSearchParameters | Med
 }
 
 /** Filter the movies based on search parameters */
-export function filterMoviesByProperties(searchParameters: MediaScan.defaultSearchParameters | MediaScan.minimalSearchParameters, allMovies: Set<MediaScan.TPN>): Set<MediaScan.TPN> {
+export function filterMoviesByProperties(searchParameters: MediaScan.SearchParameters, allMovies: Set<MediaScan.TPN>): Set<MediaScan.TPN> {
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
@@ -98,7 +98,7 @@ export function filterMoviesByProperties(searchParameters: MediaScan.defaultSear
 }
 
 /** Filter the tv series based on search parameters */
-export function filterTvSeriesByProperties(searchParameters: MediaScan.defaultSearchParameters | MediaScan.minimalSearchParameters, allTvSeries: Map<string, Set<MediaScan.TPN>>): Map<string, Set<MediaScan.TPN>> {
+export function filterTvSeriesByProperties(searchParameters: MediaScan.SearchParameters, allTvSeries: Map<string, Set<MediaScan.TPN>>): Map<string, Set<MediaScan.TPN>> {
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,

@@ -1,9 +1,9 @@
-import * as MediaScan from "../custom_types";;
+import * as MediaScan from "../custom_types";
 
 /**
  * Convert the param to valid expression object for filter function
  */
-export function convertToValidExpression(param: string | number): MediaScan.numberExpressionObject {
+export function convertToValidExpression(param: string | number): MediaScan.NumberExpressionObject {
     const validExpression = /^(==|>|<|>=|<=)(\d+)$/;
     let returnValue;
 
@@ -34,7 +34,7 @@ export function convertToValidExpression(param: string | number): MediaScan.numb
 /**
  * Filter function for filterByNumber
  */
-function resolveExpression(property: string, expressionObject: MediaScan.numberExpressionObject, object: MediaScan.TPN | MediaScan.TPN_Extended): boolean {
+function resolveExpression(property: string, expressionObject: MediaScan.NumberExpressionObject, object: MediaScan.TPN | MediaScan.TPN_Extended): boolean {
     let {operator, number} = expressionObject;
     // No : eval is not all evil but you should know what you are doing
     // eslint-disable-next-line no-eval
@@ -46,35 +46,29 @@ function resolveExpression(property: string, expressionObject: MediaScan.numberE
  * @param {searchParameters} searchObject - search parameters
  * @return {Map<string, numberExpressionObject>} the result map
  */
-export function filterDefaultNumberProperties(searchObject: MediaScan.defaultSearchParameters) {
-    const {
-        season, episode, year,
-    } = searchObject;
-
-
-    const propertiesArray = [season, episode, year];
+export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) {
     const propertiesNames = ['season', 'episode', 'year'];
-
-    return propertiesArray.reduce((propertiesMap, val, index) => {
-        if (val !== undefined) {
-            propertiesMap.set(propertiesNames[index], convertToValidExpression(val));
+    return Object.entries(searchObject).reduce((propertiesMap, [key, value]) => {
+        if (key in propertiesNames && (value !== undefined)) {
+            propertiesMap.set(key, convertToValidExpression(value));
         }
         return propertiesMap;
     }, new Map());
 }
 
 /** Remove the default number properties */
-export function excludeDefaultNumberProperties(searchObject: MediaScan.defaultSearchParameters): MediaScan.defaultSearchParameters {
-    const {
-        season, episode, year,
-        ...rest
-    } = searchObject;
+export function excludeDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.DefaultSearchParameters {
+    let rest = searchObject;
+    ['season', 'episode', 'year'].forEach((propertyName) => {
+        if (propertyName in rest)
+            delete rest[propertyName];
+    });
     return rest;
 }
 
 /** Filter the set based on string properties */
 // export function filterByNumber(set: Set<TPN>, propertiesMap: Map<string, numberExpressionObject>) : Set<TPN>
-export function filterByNumber(set: Set<MediaScan.TPN>, propertiesMap: Map<string, MediaScan.numberExpressionObject>): Set<MediaScan.TPN> {
+export function filterByNumber(set: Set<MediaScan.TPN>, propertiesMap: Map<string, MediaScan.NumberExpressionObject>): Set<MediaScan.TPN> {
     // first step : get an array so that we can do filter/reduce stuff
     // second step : iterate the propertiesMap and do filter and return the filtered array
     // val[0] : the key ; val[1] : the value

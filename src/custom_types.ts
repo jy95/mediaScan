@@ -1,7 +1,7 @@
 // default result object from all the parser I used
 // https://github.com/clement-escolano/parse-torrent-title
 // https://github.com/jy95/torrent-name-parser
-declare namespace MediaScan {
+declare module MediaScan {
 
     export interface TPN {
         title: string;
@@ -43,7 +43,7 @@ declare namespace MediaScan {
     }
 
 // which category is this file
-    export interface whichCategoryFunction {
+    export interface WhichCategoryFunction {
         (object: TPN): Category
     }
 
@@ -52,32 +52,32 @@ declare namespace MediaScan {
     export type MapSet<T> = Map<Category, MappedType<T> | Set<T>>;
 
 // example '<=25'
-    export type numberSearchSyntax = string;
+    export type NumberSearchSyntax = string;
 
 // to handle number operations
-    export interface numberExpressionObject {
+    export interface NumberExpressionObject {
         operator: "==" | ">" | "<" | ">=" | "<=",
         number: number
     }
 
-    export const enum additionalPropertiesType {
+    export const enum AdditionalPropertiesType {
         STRING = 'string',
         NUMBER = 'number',
         BOOLEAN = 'boolean'
     }
 
 // additional Properties
-    export interface additionalProperties {
-        type: additionalPropertiesType,
+    export interface AdditionalProperties {
+        type: AdditionalPropertiesType,
         name: string,
-        value: boolean | string | string[] | number | numberSearchSyntax
+        value: boolean | string | string[] | number | NumberSearchSyntax
     }
 
-    export interface minimalSearchParameters {
-        additionalProperties?: additionalProperties[]
+    export interface MinimalSearchParameters {
+        additionalProperties?: AdditionalProperties[]
     }
 
-    export interface defaultSearchParameters extends minimalSearchParameters {
+    export interface DefaultSearchParameters extends MinimalSearchParameters {
         extended?: boolean,
         unrated?: boolean,
         proper?: boolean,
@@ -86,9 +86,9 @@ declare namespace MediaScan {
         hardcoded?: boolean,
         retail?: boolean,
         remastered?: boolean,
-        season?: number | numberSearchSyntax,
-        episode?: number | numberSearchSyntax,
-        year?: number | numberSearchSyntax,
+        season?: number | NumberSearchSyntax,
+        episode?: number | NumberSearchSyntax,
+        year?: number | NumberSearchSyntax,
         title?: string | string[],
         resolution?: string | string[],
         codec?: string | string[],
@@ -98,6 +98,36 @@ declare namespace MediaScan {
         container?: string | string[],
         language?: string | string[],
         source?: string | string[],
+    }
+
+    // search parameters for filter functions
+    export type SearchParameters = Partial<DefaultSearchParameters | MinimalSearchParameters>;
+
+    // for tuples inside json in createFromJSON
+    type mappingStringAndCategory = [string, Category];
+    type mappingStringAndTPNArray = [string, TPN[]];
+
+    // json result to be used in createFromJSON
+    export interface LibAsJson {
+        allFilesWithCategory?: mappingStringAndCategory[],
+        movies?: TPN[],
+        series?: mappingStringAndTPNArray[],
+        paths?: string[]
+    }
+
+    // the data parameters for constructor (aka first argument)
+    export interface DataParameters {
+        defaultPath?: string, // Default path , if paths is empty
+        paths?: string[], // all the paths that will be explored
+        allFilesWithCategory?: Map<string, Category>, // the mapping between file and Category
+        movies?: Set<TPN | TPN_Extended>, // all the movies
+        series?: Map<string, Set<TPN | TPN_Extended>>
+    }
+
+    // the custom functions (in order to have a different behaviour) for constructor (aka second argument)
+    export interface CustomFunctionsConfig {
+        parser?: ParseFunction,
+        whichCategory?: WhichCategoryFunction
     }
 }
 
