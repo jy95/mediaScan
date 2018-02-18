@@ -35,7 +35,7 @@ test('Not an existent path', async () => {
 });
 
 /** @test {MediaScan#addNewPath} */
-test('existent paths', async () => {
+test.only('existent paths', async () => {
     let libInstance = new MediaScan();
     const eventSpy = jest.spyOn(libInstance, 'addNewPath');
     await expect(libInstance.addNewPath(...folders)).resolves;

@@ -1,6 +1,6 @@
 // Check properties
 import {access, constants as FsConstants} from "fs";
-import PromiseLib from 'bluebird';
+import * as PromiseLib from 'bluebird';
 import * as MediaScanLib from "../custom_types";
 
 export function checkProperties(obj, properties): boolean {

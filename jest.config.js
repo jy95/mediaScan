@@ -10,7 +10,7 @@ module.exports = {
         "^.+\\.(ts|tsx)$": "<rootDir>/__tests__/__helpers__/preprocessor.js"
     },
     "testMatch": [
-        "<rootDir>/__tests__/**/*.(ts|tsx|js)"
+        "<rootDir>/__tests__/**/addNewPath.(ts|tsx|js)"
     ],
     "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/__tests__/__helpers__/"],
     //"collectCoverage": true
