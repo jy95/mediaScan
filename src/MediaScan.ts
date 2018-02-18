@@ -165,23 +165,29 @@ module.exports = class MediaScan extends EventEmitter {
     }
 
     scan(): Promise<any> {
-        const foundFiles = FileHound.create()
-            .paths((this.paths.length === 0) ? this.defaultPath : this.paths)
-            .ext(videosExtension)
-            .find();
-
         return new PromiseLib((resolve, reject) => {
-            foundFiles
-                .then(files => this.addNewFiles(files)).then(() => {
-                this.emit('scan', {files: foundFiles});
-                resolve('Scanning completed');
-            }).catch((err) => {
-                this.emit('error_in_function', {
-                    functionName: 'scan',
-                    error: err.message,
+            FileHound
+                .create()
+                .paths((this.paths.length === 0) ? this.defaultPath : this.paths)
+                .ext(videosExtension)
+                .find()
+                .then(
+                    files => PromiseLib.join(this.addNewFiles(files), () => {
+                        return Promise.resolve(files)
+                    })
+                )
+                .then((files) => {
+                    this.emit('scan', {files: files});
+                    resolve('Scanning completed');
+                })
+                .catch((err) => {
+                    this.emit('error_in_function', {
+                        functionName: 'scan',
+                        error: err.message,
+                    });
+                    reject(err);
                 });
-                reject(err);
-            });
+
         }).bind(this);
     }
 
