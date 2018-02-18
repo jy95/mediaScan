@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "lib": ["ES6","ES2017","ESNext"],
+    "lib": ["ES6","ES2017","ESNext","es2017.object"],
     "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
