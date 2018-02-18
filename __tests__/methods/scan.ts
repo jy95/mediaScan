@@ -52,7 +52,7 @@ describe('scan', () => {
         const eventSpy = jest.spyOn(libInstance, 'scan');
         // whatever path that should exists
         await expect(libInstance.addNewPath(...folders).resolves);
-        await expect(libInstance.scan().rejects);
+        await expect(libInstance.scan()).rejects.toThrowError();
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
     });

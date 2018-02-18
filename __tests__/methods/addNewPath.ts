@@ -19,7 +19,7 @@ describe('addNewPath', () => {
     test('missing parameter', async () => {
         let libInstance = new MediaScan();
         const eventSpy = jest.spyOn(libInstance, 'addNewPath');
-        await expect(libInstance.addNewPath()).rejects;
+        await expect(libInstance.addNewPath()).rejects.toThrowError();
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
         expect(libInstance.hasPathsProvidedByUser()).toBe(false);
@@ -29,7 +29,7 @@ describe('addNewPath', () => {
     test('Not an existent path', async () => {
         let libInstance = new MediaScan();
         const eventSpy = jest.spyOn(libInstance, 'addNewPath');
-        await expect(libInstance.addNewPath(path.join(__dirname, 'wrongPath'))).rejects;
+        await expect(libInstance.addNewPath(path.join(__dirname, 'wrongPath'))).rejects.toThrowError();
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
         expect(libInstance.hasPathsProvidedByUser()).toBe(false);
