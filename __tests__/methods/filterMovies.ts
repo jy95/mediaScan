@@ -18,8 +18,8 @@ test('Should work without parameters', async () => {
     let libInstance = new MediaScan();
     const eventSpy = jest.spyOn(libInstance, 'scan');
     // whatever path that should exists
-    await expect(libInstance.addNewPath(...folders).resolves);
-    await expect(libInstance.scan().resolves);
+    await expect(libInstance.addNewPath(...folders)).resolves;
+    await expect(libInstance.scan()).resolves;
     expect(eventSpy).toHaveBeenCalled();
     expect(eventSpy).toHaveBeenCalledTimes(1);
     expect(new Set([
@@ -35,8 +35,8 @@ test('default boolean parameters search', async () => {
     let libInstance = new MediaScan();
     const eventSpy = jest.spyOn(libInstance, 'scan');
     // whatever path that should exists
-    await expect(libInstance.addNewPath(...folders).resolves);
-    await expect(libInstance.scan().resolves);
+    await expect(libInstance.addNewPath(...folders)).resolves;
+    await expect(libInstance.scan()).resolves;
     expect(eventSpy).toHaveBeenCalled();
     expect(eventSpy).toHaveBeenCalledTimes(1);
 
@@ -71,8 +71,8 @@ test('default number parameters search', async () => {
     let libInstance = new MediaScan();
     const eventSpy = jest.spyOn(libInstance, 'scan');
     // whatever path that should exists
-    await expect(libInstance.addNewPath(...folders).resolves);
-    await expect(libInstance.scan().resolves);
+    await expect(libInstance.addNewPath(...folders)).resolves;
+    await expect(libInstance.scan()).resolves;
     expect(eventSpy).toHaveBeenCalled();
     expect(eventSpy).toHaveBeenCalledTimes(1);
 
@@ -104,8 +104,8 @@ test('default string parameters search', async () => {
     let libInstance = new MediaScan();
     const eventSpy = jest.spyOn(libInstance, 'scan');
     // whatever path that should exists
-    await expect(libInstance.addNewPath(...folders).resolves);
-    await expect(libInstance.scan().resolves);
+    await expect(libInstance.addNewPath(...folders)).resolves;
+    await expect(libInstance.scan()).resolves;
     expect(eventSpy).toHaveBeenCalled();
     expect(eventSpy).toHaveBeenCalledTimes(1);
 

@@ -13,5 +13,5 @@ module.exports = {
         "<rootDir>/__tests__/**/*.(ts|tsx|js)"
     ],
     "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/__tests__/__helpers__/"],
-    //"collectCoverage": true
+    "collectCoverage": true
 };
