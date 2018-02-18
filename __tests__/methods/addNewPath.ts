@@ -38,8 +38,9 @@ describe('addNewPath', () => {
     /** @test {MediaScan#addNewPath} */
     test('existent paths', async () => {
         let libInstance = new MediaScan();
-        await expect(libInstance.addNewPath(...folders)).resolves;
-        expect(libInstance.hasPathsProvidedByUser()).toBeTruthy();
+        const data = await libInstance.addNewPath(...folders);
+        await expect(data).resolves;
+        expect(libInstance.hasPathsProvidedByUser()).toBe(true);
     });
 });
 

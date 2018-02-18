@@ -22,16 +22,16 @@ describe('toJSON', () => {
             paths: folders,
             allFilesWithCategory: [
                 [
-                    files[2],
-                    'MOVIES',
-                ],
-                [
                     files[0],
                     'TV_SERIES',
                 ],
                 [
                     files[1],
                     'TV_SERIES',
+                ],
+                [
+                    files[2],
+                    'MOVIES',
                 ],
             ],
             movies: [
@@ -54,8 +54,10 @@ describe('toJSON', () => {
             ],
         });
         let libInstance = new MediaScan();
-        await expect(libInstance.addNewPath(...folders)).resolves;
-        await expect(libInstance.scan()).resolves;
+        const data = await libInstance.addNewPath(...folders);
+        await expect(data).resolves;
+        const scan = await libInstance.scan();
+        await expect(scan).resolves;
         const dataFromInstance = libInstance.toJSON();
         expect(JSON.stringify(JSON.parse(dataFromInstance))).toEqual(expectedJsonString);
     });
