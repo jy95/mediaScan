@@ -42,6 +42,7 @@
     "url": "https://github.com/jy95/mediaScan.git"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.40",
     "bluebird": "^3.5.1",
     "filehound": "^1.16.2",
     "lodash": "^4.17.5",
