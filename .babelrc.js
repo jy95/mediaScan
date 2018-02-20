@@ -1,10 +1,11 @@
 // var env = process.env.BABEL_ENV || process.env.NODE_ENV; // Maybe later : for minify stuff
 var presets = [
     "@babel/env",
-    "@babel/typescript"
+    "@babel/preset-typescript"
 ];
 var plugins = [
-    "@babel/proposal-class-properties"
+    "@babel/plugin-proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
 ];
 var ignore = [];
 var comments = false;

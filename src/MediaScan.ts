@@ -1,8 +1,8 @@
 // Imports
-import * as FileHound from 'filehound';
+import FileHound from 'filehound';
 import {basename, normalize} from 'path';
 import {uniq, difference, partition, cloneDeep} from 'lodash';
-import * as PromiseLib from 'bluebird';
+import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;

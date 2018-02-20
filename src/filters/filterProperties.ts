@@ -52,13 +52,13 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
     /* istanbul ignore else */
     if (additionalProperties !== undefined) {
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.BOOLEAN)
+            .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
             .forEach((newProperty) => {
                 booleanFieldsSearchMap.set(newProperty.name, newProperty.value as boolean);
             });
 
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.NUMBER)
+            .filter(newProperty => newProperty.type === 'number' as MediaScan.AdditionalPropertiesType.NUMBER)
             .forEach((newProperty) => {
                 let expression = convertToValidExpression(newProperty.value as string|number);
                 /* istanbul ignore else */
@@ -68,7 +68,7 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
             });
 
         additionalProperties
-            .filter(newProperty => newProperty.type === MediaScan.AdditionalPropertiesType.STRING)
+            .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
             .forEach((newProperty) => {
                 stringFieldsSearchMap.set(newProperty.name, [...newProperty.value]);
             });

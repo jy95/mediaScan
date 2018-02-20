@@ -1,6 +1,6 @@
 // Check properties
 import {access, constants as FsConstants} from "fs";
-import * as PromiseLib from 'bluebird';
+import PromiseLib from 'bluebird';
 import MediaScanLib from "../declaration";
 
 // workaround : const string enum aren't compiled correctly with Babel
@@ -24,5 +24,7 @@ export function promisifiedAccess(path) : Promise<any> {
 
 // Default implementation to know which category is this file
 export function defaultWhichCategoryFunction(object : MediaScanLib.TPN) : MediaScanLib.Category{
-    return (checkProperties(object, ['season', 'episode'])) ? MediaScan.TV_SERIES_TYPE : MediaScan.MOVIES_TYPE;
+    // workaround : const string enum aren't compiled correctly with Babel
+    return (checkProperties(object, ['season', 'episode']))
+        ? 'TV_SERIES' as MediaScanLib.Category.TV_SERIES_TYPE : 'MOVIES' as MediaScanLib.Category.MOVIES_TYPE;
 }
