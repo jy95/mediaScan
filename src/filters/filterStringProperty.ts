@@ -1,6 +1,5 @@
 /** Provides a map with valid default properties */
-import * as MediaScan from "../custom_types";
-import {convertToValidExpression} from "./filterNumberProperty";
+import MediaScan from "../declaration";
 
 export function filterDefaultStringProperties(searchObject: MediaScan.DefaultSearchParameters): Map<string, string | string[]> {
     const propertiesNames = ['title', 'resolution', 'codec', 'audio', 'group',

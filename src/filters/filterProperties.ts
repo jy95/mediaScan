@@ -26,7 +26,7 @@ import {
     filterDefaultStringProperties,
     filterByString,
 } from './filterStringProperty';
-import * as MediaScan from "../custom_types";
+import MediaScan from "../declaration";
 
 /**
  * Handle searchParameters provided by user to maps

@@ -131,4 +131,4 @@ declare module MediaScan {
     }
 }
 
-export = MediaScan;
+export default MediaScan;

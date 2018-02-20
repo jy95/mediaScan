@@ -11,9 +11,10 @@
     "test": "jest",
     "semantic-release": "semantic-release -e ./config/release.config.js",
     "prepare": "npm run compile",
-    "compile": "tsc",
     "clean": "jest --clearCache",
-    "coverage": "cat ./coverage/lcov.info | coveralls"
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
+    "type-check": "tsc"
   },
   "engines": {
     "node": ">=6",
@@ -48,6 +49,11 @@
     "video-extensions": "^1.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.40",
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-typescript": "^7.0.0-beta.40",
     "@semantic-release/changelog": "^1.1.1",
     "@semantic-release/git": "^3.1.1",
     "@types/jest": "^22.1.3",

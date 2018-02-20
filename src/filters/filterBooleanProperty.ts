@@ -1,5 +1,5 @@
 /** Provides a map with valid default properties */
-import * as MediaScan from "../custom_types";
+import MediaScan from "../declaration";
 
 export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): Map<string, boolean> {
     const propertiesNames = ['extended', 'unrated', 'proper', 'repack', 'convert',
