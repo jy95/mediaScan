@@ -68,13 +68,13 @@
   },
   "greenkeeper": {
     "commitMessages": {
-      "initialBadge": "Docs: Add Greenkeeper badge",
-      "initialDependencies": "Upgrade: Update dependencies",
-      "initialBranches": "Build: Whitelist greenkeeper branches",
-      "dependencyUpdate": "Upgrade: Update ${dependency} to version ${version}",
-      "devDependencyUpdate": "Upgrade: Update ${dependency} to version ${version}",
-      "dependencyPin": "Fix: Pin ${dependency} to ${oldVersion}",
-      "devDependencyPin": "Fix: Pin ${dependency} to ${oldVersion}"
+      "initialBadge": ":memo: Docs: Add Greenkeeper badge",
+      "initialDependencies": ":gem: Upgrade: Update dependencies",
+      "initialBranches": ":tada: Build: Whitelist greenkeeper branches",
+      "dependencyUpdate": ":gem: Upgrade: Update ${dependency} to version ${version}",
+      "devDependencyUpdate": ":gem: Upgrade: Update ${dependency} to version ${version}",
+      "dependencyPin": ":bug: Fix: Pin ${dependency} to ${oldVersion}",
+      "devDependencyPin": ":bug: Fix: Pin ${dependency} to ${oldVersion}"
     }
   }
 }
