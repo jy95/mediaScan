@@ -1,5 +1,11 @@
 import MediaScan from "../declaration";
 
+const entries = require('object.entries');
+
+if (!Object.entries) {
+    entries.shim();
+}
+
 /**
  * Convert the param to valid expression object for filter function
  */

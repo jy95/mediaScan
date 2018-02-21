@@ -42,10 +42,10 @@
     "url": "https://github.com/jy95/mediaScan.git"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.40",
     "bluebird": "^3.5.1",
     "filehound": "^1.16.2",
     "lodash": "^4.17.5",
+    "object.entries": "^1.0.4",
     "parse-torrent-title": "^1.1.0",
     "video-extensions": "^1.1.0"
   },
@@ -54,7 +54,6 @@
     "@babel/core": "^7.0.0-beta.40",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.40",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.40",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-typescript": "^7.0.0-beta.40",
     "@semantic-release/changelog": "^1.1.1",

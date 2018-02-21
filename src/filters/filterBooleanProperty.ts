@@ -1,6 +1,13 @@
 /** Provides a map with valid default properties */
 import MediaScan from "../declaration";
 
+// Object.entries is not available in Node 6
+const entries = require('object.entries');
+
+if (!Object.entries) {
+    entries.shim();
+}
+
 export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): Map<string, boolean> {
     const propertiesNames = ['extended', 'unrated', 'proper', 'repack', 'convert',
         'hardcoded', 'retail', 'remastered'];
