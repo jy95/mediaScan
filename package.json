@@ -11,9 +11,10 @@
     "test": "jest",
     "semantic-release": "semantic-release -e ./config/release.config.js",
     "prepare": "npm run compile",
-    "compile": "tsc",
     "clean": "jest --clearCache",
-    "coverage": "cat ./coverage/lcov.info | coveralls"
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
+    "type-check": "tsc"
   },
   "engines": {
     "node": ">=6",
@@ -44,10 +45,17 @@
     "bluebird": "^3.5.1",
     "filehound": "^1.16.2",
     "lodash": "^4.17.5",
+    "object.entries": "^1.0.4",
     "parse-torrent-title": "^1.1.0",
     "video-extensions": "^1.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.40",
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.40",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-typescript": "^7.0.0-beta.40",
     "@semantic-release/changelog": "^1.1.1",
     "@semantic-release/git": "^3.1.1",
     "@types/jest": "^22.1.3",
@@ -55,6 +63,7 @@
     "conventional-changelog-eslint": "^1.0.2",
     "jest": "^22.3.0",
     "semantic-release": "^14.0.3",
+    "ts-jest": "^22.0.4",
     "typescript": "^2.7.2"
   },
   "greenkeeper": {

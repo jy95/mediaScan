@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
     "module": "commonjs",
     "target": "es5",
     "lib": ["ES6","ES2017","ESNext"],

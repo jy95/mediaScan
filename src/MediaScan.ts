@@ -1,8 +1,8 @@
 // Imports
-import * as FileHound from 'filehound';
+import FileHound from 'filehound';
 import {basename, normalize} from 'path';
 import {uniq, difference, partition, cloneDeep} from 'lodash';
-import * as PromiseLib from 'bluebird';
+import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
@@ -16,7 +16,7 @@ import {
 import {defaultWhichCategoryFunction, promisifiedAccess} from './utils/utils_functions';
 
 // Typescript types
-import * as mediaScan from "./custom_types";
+import mediaScan from "./declaration";
 
 /**
  * Class representing the MediaScan Library
@@ -31,8 +31,9 @@ module.exports = class MediaScan extends EventEmitter {
     protected categoryForFile: Map<string, mediaScan.Category>; // the mapping between file and Category
     protected stores: mediaScan.MapSet<mediaScan.TPN | mediaScan.TPN_Extended>; // where I keep the result of Category
     // constants getter for external purposes (example create a custom whichCategory function)
-    static readonly MOVIES_TYPE = mediaScan.Category.MOVIES_TYPE;
-    static readonly TV_SERIES_TYPE = mediaScan.Category.TV_SERIES_TYPE;
+    // workaround : const string enum aren't compiled correctly with Babel
+    static readonly MOVIES_TYPE = 'MOVIES' as mediaScan.Category.MOVIES_TYPE;
+    static readonly TV_SERIES_TYPE = 'TV_SERIES' as mediaScan.Category.TV_SERIES_TYPE;
 
     constructor({
                     defaultPath = process.cwd(),
@@ -51,8 +52,9 @@ module.exports = class MediaScan extends EventEmitter {
         this.defaultPath = defaultPath;
         this.paths = paths;
         this.stores = new Map();
-        this.stores.set(mediaScan.Category.MOVIES_TYPE, movies);
-        this.stores.set(mediaScan.Category.TV_SERIES_TYPE, series);
+        // workaround : const string enum aren't compiled correctly with Babel
+        this.stores.set(MediaScan.MOVIES_TYPE, movies);
+        this.stores.set(MediaScan.TV_SERIES_TYPE, series);
         this.categoryForFile = allFilesWithCategory;
     }
 
@@ -84,7 +86,8 @@ module.exports = class MediaScan extends EventEmitter {
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
                     // also in temp var
-                    if (fileCategory !== mediaScan.Category.TV_SERIES_TYPE) {
+                    // workaround : const string enum aren't compiled correctly with Babel
+                    if (fileCategory !== MediaScan.TV_SERIES_TYPE) {
                         moviesSet.add(jsonFile);
                     } else {
                         tvSeriesSet.add(jsonFile);
@@ -121,8 +124,9 @@ module.exports = class MediaScan extends EventEmitter {
                     });
 
                 // updates the stores var
-                this.stores.set(mediaScan.Category.MOVIES_TYPE, newMovies);
-                this.stores.set(mediaScan.Category.TV_SERIES_TYPE, newTvSeries);
+                // workaround : const string enum aren't compiled correctly with Babel
+                this.stores.set(MediaScan.MOVIES_TYPE, newMovies);
+                this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
                 resolve();
             } catch (err) {
                 reject(err);
@@ -196,11 +200,13 @@ module.exports = class MediaScan extends EventEmitter {
             try {
                 // get the data to handle this case
                 // in the first group, we got all the tv series files and in the second, the movies
+                // workaround : const string enum aren't compiled correctly with Babel
                 const processData = partition(files, file =>
-                    this.categoryForFile.get(file) === mediaScan.Category.TV_SERIES_TYPE);
+                    this.categoryForFile.get(file) === MediaScan.TV_SERIES_TYPE);
                 // for movies, just an easy removal
+                // workaround : const string enum aren't compiled correctly with Babel
                 this.stores.set(
-                    mediaScan.Category.MOVIES_TYPE,
+                    MediaScan.MOVIES_TYPE,
                     new Set([...this.allMovies]
                         .filter(movie => !(processData[1].includes(movie.filePath)))),
                 );
@@ -224,7 +230,8 @@ module.exports = class MediaScan extends EventEmitter {
                 }
 
                 // save the updated map
-                this.stores.set(mediaScan.Category.TV_SERIES_TYPE, newTvSeriesMap);
+                // workaround : const string enum aren't compiled correctly with Babel
+                this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeriesMap);
 
                 // remove the mapping
                 files.forEach((file) => {
@@ -246,11 +253,13 @@ module.exports = class MediaScan extends EventEmitter {
     }
 
     get allMovies(): Set<mediaScan.TPN_Extended> {
-        return cloneDeep(this.stores.get(mediaScan.Category.MOVIES_TYPE));
+        // workaround : const string enum aren't compiled correctly with Babel
+        return cloneDeep(this.stores.get(MediaScan.MOVIES_TYPE));
     }
 
     get allTvSeries(): Map<string, Set<mediaScan.TPN_Extended>> {
-        return cloneDeep(this.stores.get(mediaScan.Category.TV_SERIES_TYPE));
+        // workaround : const string enum aren't compiled correctly with Babel
+        return cloneDeep(this.stores.get(MediaScan.TV_SERIES_TYPE));
     }
 
     get allFilesWithCategory(): Map<string, string> {
