@@ -1,3 +1,19 @@
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/jy95/mediaScan/compare/v1.0.0...v1.0.1) (2018-02-22)
+
+
+### Docs
+
+* add README.md ([964a48fc164bcd23dc0c9c571469452e5fb2f69b](https://github.com/jy95/mediaScan/commit/964a48fc164bcd23dc0c9c571469452e5fb2f69b))
+
+### Perf
+
+* Rewritten filter functions ([9ac0a50ea8da2aafa83b18a699cd10d9968079db](https://github.com/jy95/mediaScan/commit/9ac0a50ea8da2aafa83b18a699cd10d9968079db))
+
+### Style
+
+* change greenkeeper messages with emoji ([9671e75211f271107fb784f18a2451e1a63ca921](https://github.com/jy95/mediaScan/commit/9671e75211f271107fb784f18a2451e1a63ca921))
+
 <a name="1.0.0"></a>
 # 1.0.0 (2018-02-21)
 
