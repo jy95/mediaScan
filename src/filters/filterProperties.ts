@@ -35,56 +35,50 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
     let additionalProperties = (searchParameters.additionalProperties === undefined) ? [] : searchParameters.additionalProperties;
     const booleanFieldsSearchMap = new Map(
         <[string, boolean][]>
-        additionalProperties
-            .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
-            .reduce((sub_acc, {name, value}) => {
-                /* istanbul ignore else */
-                if ( meetBooleanSpec(value) )
-                    sub_acc.push([name, value]);
-                return sub_acc;
-            }, [])
-            .concat(
-                filterDefaultBooleanProperties(searchParameters)
-            )
+        [
+            ...additionalProperties
+                .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
+                .reduce((sub_acc, {name, value}) => {
+                    /* istanbul ignore else */
+                    if ( meetBooleanSpec(value) )
+                        sub_acc.push([name, value]);
+                    return sub_acc;
+                }, [])
+            ,
+            ...filterDefaultBooleanProperties(searchParameters)
+        ]
     );
 
     const numberFieldsSearchMap = new Map(
         <[string, MediaScan.NumberExpressionObject][]>
-        additionalProperties
-            .filter(newProperty => newProperty.type === 'number' as MediaScan.AdditionalPropertiesType.NUMBER)
-            .reduce((sub_acc, {name, value}) => {
-                /* istanbul ignore else */
-                if (meetNumberSpec(value))
-                    sub_acc.push([name, value]);
-                return sub_acc;
-            }, [])
-            .concat(
-                filterDefaultNumberProperties(searchParameters)
-            )
-            .map( ([name, value]) => [name,convertToValidExpression(value)] )
-            // just to remove the invalid expression from result
-            .filter( ([name, value]) => value !== undefined)
+            [
+                ...additionalProperties
+                    .filter(newProperty => newProperty.type === 'number' as MediaScan.AdditionalPropertiesType.NUMBER)
+                    .reduce((sub_acc, {name, value}) => {
+                        /* istanbul ignore else */
+                        if (meetNumberSpec(value))
+                            sub_acc.push([name, convertToValidExpression(value as number|string)]);
+                        return sub_acc;
+                    }, [])
+                ,
+                ...filterDefaultNumberProperties(searchParameters)
+            ]
     );
 
     const stringFieldsSearchMap = new Map(
         <[string, string|string[] ][]>
-            additionalProperties
-                .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
-                .reduce( (sub_acc, {name, value} ) => {
-                    /* istanbul ignore else */
-                    if (meetStringSpec(value))
-                        sub_acc.push([name, value ]);
-                    return sub_acc;
-                }, [])
-                .concat(
-                    filterDefaultStringProperties(searchParameters)
-                        .reduce( (sub_acc, [name, value] ) => {
-                            /* istanbul ignore else */
-                            if (meetStringSpec(value))
-                                sub_acc.push([name, value ]);
-                            return sub_acc;
-                        }, [])
-                )
+      [
+          ...additionalProperties
+              .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
+              .reduce( (sub_acc, {name, value} ) => {
+                  /* istanbul ignore else */
+                  if (meetStringSpec(value))
+                      sub_acc.push([name, value ]);
+                  return sub_acc;
+              }, [])
+          ,
+          ...filterDefaultStringProperties(searchParameters)
+      ]
     );
 
     return {

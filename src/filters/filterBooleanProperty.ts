@@ -7,7 +7,7 @@ export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSe
         'hardcoded', 'retail', 'remastered'];
     return filterDefaultProperties<boolean>(propertiesNames, searchObject, (value) => {
         return meetBooleanSpec(value);
-    });
+    }, ((key, value) => [key, value]));
 }
 
 /** Filter the set based on boolean properties */

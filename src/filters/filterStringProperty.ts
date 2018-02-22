@@ -7,7 +7,7 @@ export function filterDefaultStringProperties(searchObject: MediaScan.DefaultSea
         'region', 'container', 'language', 'source'];
     return filterDefaultProperties<string|string[]>(propertiesNames, searchObject, (value) => {
         return meetStringSpec(value);
-    });
+    }, ((key, value) => [key, value]));
 }
 
 /** Filter function for filterByString */

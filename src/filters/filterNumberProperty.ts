@@ -1,11 +1,11 @@
 import MediaScan from "../declaration";
 import {filterDefaultProperties} from "../utils/utils_functions";
 
+const validExpression = /^(==|>|<|>=|<=)(\d+)$/;
 /**
  * Convert the param to valid expression object for filter function
  */
 export function convertToValidExpression(param: string | number): MediaScan.NumberExpressionObject {
-    const validExpression = /^(==|>|<|>=|<=)(\d+)$/;
     let returnValue;
 
     switch (typeof param) {
@@ -43,11 +43,11 @@ function resolveExpression(property: string, expressionObject: MediaScan.NumberE
     return eval(`${object[property]}${operator}${number}`);
 }
 
-export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) : MediaScan.filterTuple<number | MediaScan.NumberSearchSyntax>[] {
+export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) : MediaScan.filterTuple<MediaScan.NumberExpressionObject>[] {
     const propertiesNames = ['season', 'episode', 'year'];
-    return filterDefaultProperties<number | MediaScan.NumberSearchSyntax>(propertiesNames, searchObject, (value) => {
+    return filterDefaultProperties<MediaScan.NumberExpressionObject>(propertiesNames, searchObject, (value) => {
         return meetNumberSpec(value);
-    });
+    }, (key, value) => [key, convertToValidExpression(value)]);
 }
 
 /** Filter the set based on string properties */
@@ -67,5 +67,11 @@ export function filterByNumber(set: Set<MediaScan.TPN>, propertiesMap: Map<strin
 
 // Just for type check this type
 export function meetNumberSpec(value) {
-    return (typeof value === 'string' || typeof value === 'number');
+    if (typeof value === 'number')
+        return true;
+    else
+        if (typeof value !== 'string')
+            return false;
+        else
+            return validExpression.test(value as string);
 }

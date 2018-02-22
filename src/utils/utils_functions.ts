@@ -3,9 +3,6 @@ import {access, constants as FsConstants} from "fs";
 import PromiseLib from 'bluebird';
 import MediaScanLib from "../declaration";
 
-// workaround : const string enum aren't compiled correctly with Babel
-const MediaScan = require('../MediaScan');
-
 export function checkProperties(obj, properties): boolean {
     return properties.every(x => x in obj && obj[x]);
 }
@@ -30,10 +27,12 @@ export function defaultWhichCategoryFunction(object : MediaScanLib.TPN) : MediaS
 }
 
 // Generic filter for default properties
-export function filterDefaultProperties<T>(propertiesNames : string[], search : MediaScanLib.SearchParameters, meetSpecFunction : (value) => boolean ) : MediaScanLib.filterTuple<T>[]  {
+export function filterDefaultProperties<T>(propertiesNames : string[],
+                                           search : MediaScanLib.SearchParameters, meetSpecFunction : (value) => boolean,
+                                           transformFunction : (key : string, value) => MediaScanLib.filterTuple<T> ) : MediaScanLib.filterTuple<T>[]  {
     return propertiesNames.reduce( (acc, currentProperty) => {
         if (meetSpecFunction(search[currentProperty]))
-            acc.push([currentProperty, search[currentProperty] ]);
+            acc.push(transformFunction(currentProperty, search[currentProperty]));
         return acc;
     }, []);
 }
