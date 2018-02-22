@@ -11,6 +11,7 @@ export function convertToValidExpression(param: string | number): MediaScan.Numb
     switch (typeof param) {
         case "string":
             // if it is a valid number expression like the regex
+            /* istanbul ignore else */
             if (validExpression.test(param as string)) {
                 let result = (param as string).match(validExpression);
                 returnValue = {

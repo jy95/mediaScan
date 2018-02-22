@@ -266,6 +266,7 @@ module.exports = class MediaScan extends EventEmitter {
         return cloneDeep(this.categoryForFile);
     }
 
+    // full data of lib as JSON string
     toJSON(): string {
         const tvSeries = this.allTvSeries;
         return `{
@@ -273,9 +274,30 @@ module.exports = class MediaScan extends EventEmitter {
     "allFilesWithCategory":${JSON.stringify([...this.allFilesWithCategory])},
     "movies":${JSON.stringify([...this.allMovies])},
     "series":${JSON.stringify([...tvSeries].map(serie =>
-            // serie[0] contains the title and [1] the wrong JSON ; let fix it
+            // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
             [serie[0], [...tvSeries.get(serie[0])]]))}
     }`.trim();
+    }
+
+    // data as a JSON object
+    toJSONObject(looseMode? : boolean) : mediaScan.LibAsJson {
+        // if in loose Mode , the objects will only contains the mapping between filepath and Category
+        const toBeSerialized = (looseMode)
+            ? [ ["allFilesWithCategory", [...this.allFilesWithCategory] ] ]
+            : [
+                ["paths", [...this.paths] ],
+                ["allFilesWithCategory", [...this.allFilesWithCategory] ],
+                ["movies", [...this.allMovies]],
+                ["series", [...this.allTvSeries].map(
+                    // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
+                    series => [series[0], [...this.allTvSeries.get(series[0])] ]
+                )]
+            ];
+
+        return toBeSerialized.reduce( (result, [key, value] ) => {
+            result[key as string] = value;
+            return result;
+        }, {});
     }
 
     static createFromJSON(json: mediaScan.LibAsJson, customConfig?: mediaScan.CustomFunctionsConfig): MediaScan {
