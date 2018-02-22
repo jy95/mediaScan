@@ -28,3 +28,12 @@ export function defaultWhichCategoryFunction(object : MediaScanLib.TPN) : MediaS
     return (checkProperties(object, ['season', 'episode']))
         ? 'TV_SERIES' as MediaScanLib.Category.TV_SERIES_TYPE : 'MOVIES' as MediaScanLib.Category.MOVIES_TYPE;
 }
+
+// Generic filter for default properties
+export function filterDefaultProperties<T>(propertiesNames : string[], search : MediaScanLib.SearchParameters, meetSpecFunction : (value) => boolean ) : MediaScanLib.filterTuple<T>[]  {
+    return propertiesNames.reduce( (acc, currentProperty) => {
+        if (meetSpecFunction(search[currentProperty]))
+            acc.push([currentProperty, search[currentProperty] ]);
+        return acc;
+    }, []);
+}

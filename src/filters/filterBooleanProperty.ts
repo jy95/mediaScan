@@ -1,33 +1,13 @@
 /** Provides a map with valid default properties */
 import MediaScan from "../declaration";
+import {filterDefaultProperties} from '../utils/utils_functions';
 
-// Object.entries is not available in Node 6
-const entries = require('object.entries');
-
-if (!Object.entries) {
-    entries.shim();
-}
-
-export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): Map<string, boolean> {
+export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.filterTuple<boolean>[] {
     const propertiesNames = ['extended', 'unrated', 'proper', 'repack', 'convert',
         'hardcoded', 'retail', 'remastered'];
-    return Object.entries(searchObject).reduce((propertiesMap, [key, value]) => {
-        if (key in propertiesNames && (value === true || value === false)) {
-            propertiesMap.set(key, value);
-        }
-        return propertiesMap;
-    }, new Map());
-}
-
-/** Remove the default boolean properties */
-export function excludeDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.DefaultSearchParameters {
-    let rest = searchObject;
-    ['extended', 'unrated', 'proper', 'repack', 'convert',
-        'hardcoded', 'retail', 'remastered'].forEach((propertyName) => {
-        if (propertyName in rest)
-            delete rest[propertyName];
+    return filterDefaultProperties<boolean>(propertiesNames, searchObject, (value) => {
+        return meetBooleanSpec(value);
     });
-    return rest;
 }
 
 /** Filter the set based on boolean properties */
@@ -42,4 +22,9 @@ export function filterByBoolean(set: Set<MediaScan.TPN>, propertiesMap: Map<stri
             (currentMoviesArray, val) => currentMoviesArray.filter(TPN => TPN[val[0]] === val[1])
             , [...set],
         ));
+}
+
+// Just for type check this type
+export function meetBooleanSpec(value) {
+    return (value === true || value === false);
 }

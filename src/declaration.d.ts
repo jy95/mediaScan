@@ -103,6 +103,9 @@ declare module MediaScan {
     // search parameters for filter functions
     export type SearchParameters = Partial<DefaultSearchParameters | MinimalSearchParameters>;
 
+    // for filtering tuples inside SearchParameters
+    type filterTuple<T> = [string, T];
+
     // for tuples inside json in createFromJSON
     type mappingStringAndCategory = [string, Category];
     type mappingStringAndTPNArray = [string, TPN[]];

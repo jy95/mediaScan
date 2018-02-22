@@ -1,10 +1,5 @@
 import MediaScan from "../declaration";
-
-const entries = require('object.entries');
-
-if (!Object.entries) {
-    entries.shim();
-}
+import {filterDefaultProperties} from "../utils/utils_functions";
 
 /**
  * Convert the param to valid expression object for filter function
@@ -47,29 +42,11 @@ function resolveExpression(property: string, expressionObject: MediaScan.NumberE
     return eval(`${object[property]}${operator}${number}`);
 }
 
-/**
- * Provides a map with valid default properties
- * @param {searchParameters} searchObject - search parameters
- * @return {Map<string, numberExpressionObject>} the result map
- */
-export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) {
+export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) : MediaScan.filterTuple<number | MediaScan.NumberSearchSyntax>[] {
     const propertiesNames = ['season', 'episode', 'year'];
-    return Object.entries(searchObject).reduce((propertiesMap, [key, value]) => {
-        if (key in propertiesNames && (value !== undefined)) {
-            propertiesMap.set(key, convertToValidExpression(value));
-        }
-        return propertiesMap;
-    }, new Map());
-}
-
-/** Remove the default number properties */
-export function excludeDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.DefaultSearchParameters {
-    let rest = searchObject;
-    ['season', 'episode', 'year'].forEach((propertyName) => {
-        if (propertyName in rest)
-            delete rest[propertyName];
+    return filterDefaultProperties<number | MediaScan.NumberSearchSyntax>(propertiesNames, searchObject, (value) => {
+        return meetNumberSpec(value);
     });
-    return rest;
 }
 
 /** Filter the set based on string properties */
@@ -85,4 +62,9 @@ export function filterByNumber(set: Set<MediaScan.TPN>, propertiesMap: Map<strin
             (currentMoviesArray, val) => currentMoviesArray.filter(TPN => resolveExpression(val[0], val[1], TPN))
             , [...set],
         ));
+}
+
+// Just for type check this type
+export function meetNumberSpec(value) {
+    return (typeof value === 'string' || typeof value === 'number');
 }
