@@ -1,3 +1,19 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/jy95/mediaScan/compare/v1.0.1...v1.1.0) (2018-02-22)
+
+
+### Docs
+
+* Add Greenkeeper badge ([afb7bb20b983a55483d9ce5cf2a0dc595322d5ad](https://github.com/jy95/mediaScan/commit/afb7bb20b983a55483d9ce5cf2a0dc595322d5ad))
+
+### Feat
+
+* toJSONObject method ([f625e4a6e46e1430cb0a359fd445ecc9ee1d7969](https://github.com/jy95/mediaScan/commit/f625e4a6e46e1430cb0a359fd445ecc9ee1d7969))
+
+### Perf
+
+* Rewrite filter search Map in ES6 ([5fb3b4328a1e47120afd171a0cfba524cfed7155](https://github.com/jy95/mediaScan/commit/5fb3b4328a1e47120afd171a0cfba524cfed7155))
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/jy95/mediaScan/compare/v1.0.0...v1.0.1) (2018-02-22)
 
