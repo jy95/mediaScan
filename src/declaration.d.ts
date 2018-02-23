@@ -106,6 +106,9 @@ declare module MediaScan {
     // for filtering tuples inside SearchParameters
     type filterTuple<T> = [string, T];
 
+    // for optimized filtering function
+    export type filterFunctionTuple = [{(set: Set<TPN>, propertiesMap: Map<string, any>)}, Map<string, any>];
+
     // for tuples inside json in createFromJSON
     type mappingStringAndCategory = [string, Category];
     type mappingStringAndTPNArray = [string, TPN[]];

@@ -94,14 +94,15 @@ export function filterMoviesByProperties(searchParameters: MediaScan.SearchParam
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
     } = mapProperties(searchParameters);
-    const propertiesWithAllProperties
-        = [booleanFieldsSearchMap, stringFieldsSearchMap, numberFieldsSearchMap];
-    let result = allMovies;
-    [filterByBoolean, filterByString, filterByNumber]
-        .forEach((filterFunction: (set: Set<MediaScan.TPN>, propertiesMap: Map<string, any>) => Set<MediaScan.TPN>, index) => {
-            result = filterFunction(result, propertiesWithAllProperties[index]);
-        });
-    return result;
+    const filterStuff : MediaScan.filterFunctionTuple[] = [
+        [filterByBoolean, booleanFieldsSearchMap],
+        [filterByString , stringFieldsSearchMap],
+        [filterByNumber, numberFieldsSearchMap]
+    ];
+
+    return filterStuff
+        .reduce((processingResult, [filterFunction , propertiesMap ]) => filterFunction(processingResult, propertiesMap)
+            , allMovies);
 }
 
 /** Filter the tv series based on search parameters */
