@@ -25,12 +25,14 @@ describe('filterMovies', () => {
         await expect(libInstance.scan()).resolves;
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
-        expect(new Set([
-            Object.assign(
-                nameParser(path.basename(files[2])),
-                {filePath: files[2]},
-            ),
-        ])).toEqual(libInstance.filterMovies());
+        expect(libInstance.filterMovies()).toEqual(
+            new Set([
+                Object.assign(
+                    nameParser(path.basename(files[2])),
+                    {filePath: files[2]},
+                ),
+            ])
+        );
     });
 
     /** @test {MediaScan#filterMovies} */
@@ -44,17 +46,21 @@ describe('filterMovies', () => {
         expect(eventSpy).toHaveBeenCalledTimes(1);
 
         // A simple filter that should returns the only movie that we have
-        expect(new Set([
-            Object.assign(
-                nameParser(path.basename(files[2])),
-                {filePath: files[2]},
-            ),
-        ])).toEqual(libInstance.filterMovies({
-            remastered: true,
-        }));
+        expect(
+            libInstance.filterMovies({
+                remastered: true,
+            })
+        ).toEqual(
+            new Set([
+                Object.assign(
+                    nameParser(path.basename(files[2])),
+                    {filePath: files[2]},
+                ),
+            ])
+        );
 
         // A complex filter that should returns nothing
-        expect(new Set()).toEqual(libInstance.filterMovies({
+        expect(libInstance.filterMovies({
             extended: true,
             unrated: true,
             proper: true,
@@ -66,7 +72,7 @@ describe('filterMovies', () => {
             additionalProperties: [
                 {type: 'boolean', name: 'AnotherField', value: true},
             ],
-        }));
+        })).toEqual(new Set());
     });
 
     /** @test {MediaScan#filterMovies} */
@@ -80,17 +86,17 @@ describe('filterMovies', () => {
         expect(eventSpy).toHaveBeenCalledTimes(1);
 
         // A simple filter that should returns the only movie that we have
-        expect(new Set([
+        expect(libInstance.filterMovies({
+            year: 2012,
+        })).toEqual(new Set([
             Object.assign(
                 nameParser(path.basename(files[2])),
                 {filePath: files[2]},
             ),
-        ])).toEqual(libInstance.filterMovies({
-            year: 2012,
-        }));
+        ]));
 
         // A complex filter that should returns nothing
-        expect(new Set()).toEqual(libInstance.filterMovies({
+        expect(libInstance.filterMovies({
             year: '>=2012',
             additionalProperties: [
                 {type: 'number', name: "whateverFieldThatDoesn'tExist", value: '<50'},
@@ -99,7 +105,7 @@ describe('filterMovies', () => {
                 {type: 'number', name: 'AnotherField3', value: '>25'},
                 {type: 'number', name: 'AnotherField4', value: '==25'},
             ],
-        }));
+        })).toEqual(new Set());
     });
 
     /** @test {MediaScan#filterMovies} */
@@ -123,7 +129,7 @@ describe('filterMovies', () => {
         }));
 
         // A complex filter that should returns nothing
-        expect(new Set()).toEqual(libInstance.filterMovies({
+        expect(libInstance.filterMovies({
             title: 'Bad Ass',
             additionalProperties: [
                 {
@@ -139,7 +145,7 @@ describe('filterMovies', () => {
                 {type: 'string', name: 'AnotherField2', value: '<=25'},
                 {type: 'string', name: 'AnotherField3', value: '>25'},
             ],
-        }));
+        })).toEqual(new Set());
     });
 
 });
