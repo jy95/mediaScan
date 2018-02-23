@@ -35,18 +35,18 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
     let additionalProperties = (searchParameters.additionalProperties === undefined) ? [] : searchParameters.additionalProperties;
     const booleanFieldsSearchMap = new Map(
         <[string, boolean][]>
-        [
-            ...additionalProperties
-                .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
-                .reduce((sub_acc, {name, value}) => {
-                    /* istanbul ignore else */
-                    if ( meetBooleanSpec(value) )
-                        sub_acc.push([name, value]);
-                    return sub_acc;
-                }, [])
-            ,
-            ...filterDefaultBooleanProperties(searchParameters)
-        ]
+            [
+                ...additionalProperties
+                    .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
+                    .reduce((sub_acc, {name, value}) => {
+                        /* istanbul ignore else */
+                        if (meetBooleanSpec(value))
+                            sub_acc.push([name, value]);
+                        return sub_acc;
+                    }, [])
+                ,
+                ...filterDefaultBooleanProperties(searchParameters)
+            ]
     );
 
     const numberFieldsSearchMap = new Map(
@@ -57,7 +57,7 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
                     .reduce((sub_acc, {name, value}) => {
                         /* istanbul ignore else */
                         if (meetNumberSpec(value))
-                            sub_acc.push([name, convertToValidExpression(value as number|string)]);
+                            sub_acc.push([name, convertToValidExpression(value as number | string)]);
                         return sub_acc;
                     }, [])
                 ,
@@ -66,19 +66,19 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
     );
 
     const stringFieldsSearchMap = new Map(
-        <[string, string|string[] ][]>
-      [
-          ...additionalProperties
-              .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
-              .reduce( (sub_acc, {name, value} ) => {
-                  /* istanbul ignore else */
-                  if (meetStringSpec(value))
-                      sub_acc.push([name, value ]);
-                  return sub_acc;
-              }, [])
-          ,
-          ...filterDefaultStringProperties(searchParameters)
-      ]
+        <[string, string | string[]][]>
+            [
+                ...additionalProperties
+                    .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
+                    .reduce((sub_acc, {name, value}) => {
+                        /* istanbul ignore else */
+                        if (meetStringSpec(value))
+                            sub_acc.push([name, value]);
+                        return sub_acc;
+                    }, [])
+                ,
+                ...filterDefaultStringProperties(searchParameters)
+            ]
     );
 
     return {
@@ -94,14 +94,14 @@ export function filterMoviesByProperties(searchParameters: MediaScan.SearchParam
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
     } = mapProperties(searchParameters);
-    const filterStuff : MediaScan.filterFunctionTuple[] = [
+    const filterStuff: MediaScan.filterFunctionTuple[] = [
         [filterByBoolean, booleanFieldsSearchMap],
-        [filterByString , stringFieldsSearchMap],
+        [filterByString, stringFieldsSearchMap],
         [filterByNumber, numberFieldsSearchMap]
     ];
 
     return filterStuff
-        .reduce((processingResult, [filterFunction , propertiesMap ]) => filterFunction(processingResult, propertiesMap)
+        .reduce((processingResult, [filterFunction, propertiesMap]) => filterFunction(processingResult, propertiesMap)
             , allMovies);
 }
 
@@ -111,22 +111,25 @@ export function filterTvSeriesByProperties(searchParameters: MediaScan.SearchPar
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
     } = mapProperties(searchParameters);
-    const propertiesWithAllProperties
-        = [booleanFieldsSearchMap, stringFieldsSearchMap, numberFieldsSearchMap];
-    let result: Map<string, Set<MediaScan.TPN>> = allTvSeries;
-    // filtering stuff
-    // it also removes all entries that have an empty Set so that we can clearly see only valid things
+    const filterStuff: MediaScan.filterFunctionTuple[] = [
+        [filterByBoolean, booleanFieldsSearchMap],
+        [filterByString, stringFieldsSearchMap],
+        [filterByNumber, numberFieldsSearchMap]
+    ];
 
-    [filterByBoolean, filterByString, filterByNumber]
-        .forEach((filterFunction: (set: Set<MediaScan.TPN>, propertiesMap: Map<string, any>) => Set<MediaScan.TPN>, index) => {
-            result = new Map(<[string, Set<MediaScan.TPN>][]>
-                Array.from(
-                    result.entries(),
-                    ([showName, showSet]) => [showName, filterFunction(showSet, propertiesWithAllProperties[index])],
-                )
-                // eslint-disable-next-line no-unused-vars
-                    .filter(([showName, showSet]) => (showSet as Set<MediaScan.TPN>).size > 0));
-        });
-
-    return result;
+    // apply the filters
+    return new Map(
+        [...allTvSeries]
+            .reduce((processingArray, [showName, showSet]) => {
+                // execute the filter functions
+                let filteredSet = filterStuff.reduce((currentFilteredSet, [filterFunction, propertiesMap]) => {
+                    return currentFilteredSet.size > 0 && propertiesMap.size > 0 ? filterFunction(currentFilteredSet, propertiesMap) : currentFilteredSet;
+                }, showSet);
+                // add this entry if there is soms episode(s) left
+                if (filteredSet.size > 0)
+                    processingArray.push([showName, filteredSet]);
+                // reducer call
+                return processingArray;
+            }, [])
+    );
 }
