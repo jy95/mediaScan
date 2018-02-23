@@ -25,18 +25,20 @@ describe('filterTvSeries', () => {
         await expect(libInstance.scan()).resolves;
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
-        expect(new Map([
-            [nameParser(path.basename(files[0])).title, new Set([
-                Object.assign(
-                    nameParser(path.basename(files[0])),
-                    {filePath: files[0]},
-                ),
-                Object.assign(
-                    nameParser(path.basename(files[1])),
-                    {filePath: files[1]},
-                ),
-            ])],
-        ])).toEqual(libInstance.filterTvSeries());
+        expect(libInstance.filterTvSeries()).toEqual(
+            new Map([
+                [nameParser(path.basename(files[0])).title, new Set([
+                    Object.assign(
+                        nameParser(path.basename(files[0])),
+                        {filePath: files[0]},
+                    ),
+                    Object.assign(
+                        nameParser(path.basename(files[1])),
+                        {filePath: files[1]},
+                    ),
+                ])],
+            ])
+        );
     });
 
     /** @test {MediaScan#filterTvSeries} */
@@ -51,7 +53,7 @@ describe('filterTvSeries', () => {
 
 
         // A complex filter that should returns nothing
-        expect(new Map()).toEqual(libInstance.filterTvSeries({
+        expect(libInstance.filterTvSeries({
             extended: true,
             unrated: true,
             proper: true,
@@ -63,7 +65,7 @@ describe('filterTvSeries', () => {
             additionalProperties: [
                 {type: 'boolean', name: 'AnotherField', value: true},
             ],
-        }));
+        })).toEqual(new Map());
     });
 
     /** @test {MediaScan#filterTvSeries} */
@@ -77,23 +79,25 @@ describe('filterTvSeries', () => {
         expect(eventSpy).toHaveBeenCalledTimes(1);
 
         // A simple filter that should returns the two tv series that we have
-        expect(new Map([
-            [nameParser(path.basename(files[0])).title, new Set([
-                Object.assign(
-                    nameParser(path.basename(files[0])),
-                    {filePath: files[0]},
-                ),
-                Object.assign(
-                    nameParser(path.basename(files[1])),
-                    {filePath: files[1]},
-                ),
-            ])],
-        ])).toEqual(libInstance.filterTvSeries({
+        expect(libInstance.filterTvSeries({
             season: 4,
-        }));
+        })).toEqual(
+            new Map([
+                [nameParser(path.basename(files[0])).title, new Set([
+                    Object.assign(
+                        nameParser(path.basename(files[0])),
+                        {filePath: files[0]},
+                    ),
+                    Object.assign(
+                        nameParser(path.basename(files[1])),
+                        {filePath: files[1]},
+                    ),
+                ])],
+            ])
+        );
 
         // A complex filter that should returns nothing
-        expect(new Map()).toEqual(libInstance.filterTvSeries({
+        expect((libInstance.filterTvSeries({
             season: '>=4',
             additionalProperties: [
                 {type: 'number', name: "whateverFieldThatDoesn'tExist", value: '<50'},
@@ -102,7 +106,9 @@ describe('filterTvSeries', () => {
                 {type: 'number', name: 'AnotherField3', value: '>25'},
                 {type: 'number', name: 'AnotherField4', value: '==25'},
             ],
-        }));
+        }))).toEqual(
+            new Map()
+        );
     });
 
     /** @test {MediaScan#filterTvSeries} */
@@ -116,23 +122,25 @@ describe('filterTvSeries', () => {
         expect(eventSpy).toHaveBeenCalledTimes(1);
 
         // A simple filter that should returns the only movie that we have
-        expect(new Map([
-            [nameParser(path.basename(files[0])).title, new Set([
-                Object.assign(
-                    nameParser(path.basename(files[0])),
-                    {filePath: files[0]},
-                ),
-                Object.assign(
-                    nameParser(path.basename(files[1])),
-                    {filePath: files[1]},
-                ),
-            ])],
-        ])).toEqual(libInstance.filterTvSeries({
+        expect(libInstance.filterTvSeries({
             title: 'The Blacklist',
-        }));
+        })).toEqual(
+            new Map([
+                [nameParser(path.basename(files[0])).title, new Set([
+                    Object.assign(
+                        nameParser(path.basename(files[0])),
+                        {filePath: files[0]},
+                    ),
+                    Object.assign(
+                        nameParser(path.basename(files[1])),
+                        {filePath: files[1]},
+                    ),
+                ])],
+            ])
+        );
 
         // A complex filter that should returns nothing
-        expect(new Map()).toEqual(libInstance.filterTvSeries({
+        expect(libInstance.filterTvSeries({
             title: 'The Blacklist',
             additionalProperties: [
                 {
@@ -148,7 +156,7 @@ describe('filterTvSeries', () => {
                 {type: 'number', name: 'AnotherField2', value: '<=25'},
                 {type: 'number', name: 'AnotherField3', value: '>25'},
             ],
-        }));
+        })).toEqual(new Map());
     });
 
 });

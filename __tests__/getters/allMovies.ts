@@ -22,11 +22,13 @@ describe('allMovies', () => {
         let libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders).resolves);
         await expect(libInstance.scan().resolves);
-        expect(new Set([
-            Object.assign(
-                nameParser(basename(files[2])),
-                {filePath: files[2]},
-            ),
-        ])).toEqual(libInstance.allMovies);
+        expect(libInstance.allMovies).toEqual(
+            new Set([
+                Object.assign(
+                    nameParser(basename(files[2])),
+                    {filePath: files[2]},
+                ),
+            ])
+        );
     });
 });
