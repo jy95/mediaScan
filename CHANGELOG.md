@@ -1,3 +1,16 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/jy95/mediaScan/compare/v1.1.0...v1.1.1) (2018-02-23)
+
+
+### Refactor
+
+* filterMoviesByProperties rewritten ([a0a209b96a977e6a941b8a28370e88e5a9ce4ef3](https://github.com/jy95/mediaScan/commit/a0a209b96a977e6a941b8a28370e88e5a9ce4ef3))
+* filterTvSeriesByProperties Rewritten ([f0af6d4c9603d471341cba7dd25c6ee358ad97f4](https://github.com/jy95/mediaScan/commit/f0af6d4c9603d471341cba7dd25c6ee358ad97f4))
+
+### Test
+
+* Expect direction ([bc738e49a088ddbf18e8469b44519b8f1d087d51](https://github.com/jy95/mediaScan/commit/bc738e49a088ddbf18e8469b44519b8f1d087d51))
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/jy95/mediaScan/compare/v1.0.1...v1.1.0) (2018-02-22)
 
