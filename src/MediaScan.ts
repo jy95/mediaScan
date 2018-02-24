@@ -99,29 +99,28 @@ module.exports = class MediaScan extends EventEmitter {
 
                 // add the tv series into newTvSeries
                 // First step : find all the series not in newTvSeries and add them to newTvSeries
-                difference(
+                for (const tvSeriesToInsert of difference(
                     uniq([...tvSeriesSet].map(tvSeries => tvSeries.title)),
                     ...newTvSeries.keys(),
-                ).forEach((tvSeriesToInsert) => {
+                )) {
                     newTvSeries.set(tvSeriesToInsert, new Set());
-                });
+                }
 
                 // Second step : add the new files into the correct tvSeries Set
-                uniq([...tvSeriesSet].map(tvSeries => tvSeries.title))
-                    .forEach((tvSerie) => {
-                        // get the current set for this tvSerie
-                        const currentTvSerie: Set<mediaScan.TPN_Extended> = newTvSeries.get(tvSerie);
+                for (const tvSerie of uniq([...tvSeriesSet].map(tvSeries => tvSeries.title)) ){
+                    // get the current set for this tvSerie
+                    const currentTvSerie: Set<mediaScan.TPN_Extended> = newTvSeries.get(tvSerie);
 
-                        // find all the episodes in the new one for this serie
-                        const episodes = [...tvSeriesSet]
-                            .filter(episode => episode.title === tvSerie);
+                    // find all the episodes in the new one for this serie
+                    const episodes = [...tvSeriesSet]
+                        .filter(episode => episode.title === tvSerie);
 
-                        // add them and updates newTvSeries
-                        newTvSeries.set(
-                            tvSerie,
-                            new Set([...currentTvSerie, ...episodes]),
-                        );
-                    });
+                    // add them and updates newTvSeries
+                    newTvSeries.set(
+                        tvSerie,
+                        new Set([...currentTvSerie, ...episodes]),
+                    );
+                }
 
                 // updates the stores var
                 // workaround : const string enum aren't compiled correctly with Babel
