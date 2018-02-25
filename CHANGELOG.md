@@ -1,3 +1,16 @@
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/jy95/mediaScan/compare/v1.1.2...v1.1.3) (2018-02-25)
+
+
+### Perf
+
+* addNewFiles rewritten with Lodash ([3edb2294ce78036c539faad70508c7cdb403e099](https://github.com/jy95/mediaScan/commit/3edb2294ce78036c539faad70508c7cdb403e099))
+* removeOldFiles rewritten with Lodash ([95f784690110db972412ccee335eff0e0185fd1c](https://github.com/jy95/mediaScan/commit/95f784690110db972412ccee335eff0e0185fd1c))
+
+### Refactor
+
+* Drop forEach to for ... of ([b2c87c594edb16141fecf36704a0d5b80ba88ed3](https://github.com/jy95/mediaScan/commit/b2c87c594edb16141fecf36704a0d5b80ba88ed3))
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/jy95/mediaScan/compare/v1.1.1...v1.1.2) (2018-02-25)
 
