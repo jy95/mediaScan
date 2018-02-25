@@ -1,6 +1,6 @@
 // var env = process.env.BABEL_ENV || process.env.NODE_ENV; // Maybe later : for minify stuff
 var presets = [
-    "@babel/env",
+    ["@babel/env", { loose: true, "targets": { "node": 6 } } ],
     "@babel/preset-typescript"
 ];
 var plugins = [

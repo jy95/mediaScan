@@ -9,7 +9,7 @@ import {parse as nameParser} from 'parse-torrent-title';
 import {files, folders, MediaScan} from '../__helpers__/_constants';
 import {basename} from "path";
 
-describe('allMovies', () => {
+describe('removeOldFiles', () => {
 
     beforeAll(() => {
         // Set up some mocked out file info before each test
