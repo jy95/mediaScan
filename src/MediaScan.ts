@@ -1,7 +1,7 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, partition, cloneDeep} from 'lodash';
+import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
@@ -65,16 +65,8 @@ module.exports = class MediaScan extends EventEmitter {
                 const alreadyFoundFiles = [...this.categoryForFile.keys()];
                 const newFiles = difference(files, alreadyFoundFiles);
 
-                // temp var for new files before adding them to stores var
-                const moviesSet = new Set();
-                const tvSeriesSet = new Set();
-
-                // get previous result of stores var
-                let newMovies = this.allMovies;
-                const newTvSeries = this.allTvSeries;
-
                 // process each file
-                for (const file of newFiles) {
+                let scanningResult = reduce(newFiles, (result, file) => {
                     // get data from nameParser lib
                     // what we need is only the basename, not the full path
                     const jsonFile = this.parser(basename(file));
@@ -85,47 +77,37 @@ module.exports = class MediaScan extends EventEmitter {
                     const fileCategory = this.whichCategory(jsonFile);
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
-                    // also in temp var
-                    // workaround : const string enum aren't compiled correctly with Babel
-                    if (fileCategory !== MediaScan.TV_SERIES_TYPE) {
-                        moviesSet.add(jsonFile);
-                    } else {
-                        tvSeriesSet.add(jsonFile);
-                    }
+                    // store the result for next usage
+                    result[fileCategory] = concat( (has(result, fileCategory)) ? result[fileCategory] : [] , jsonFile);
+                    return result;
+                }, {});
+
+                // add the found movies
+                if (scanningResult[MediaScan.MOVIES_TYPE] !== undefined) {
+                    this.stores.set(MediaScan.MOVIES_TYPE,
+                        new Set([...this.allMovies, ...scanningResult[MediaScan.MOVIES_TYPE]]));
                 }
 
-                // add the movies into newMovies
-                newMovies = new Set([...newMovies, ...moviesSet]);
-
-                // add the tv series into newTvSeries
-                // First step : find all the series not in newTvSeries and add them to newTvSeries
-                for (const tvSeriesToInsert of difference(
-                    uniq([...tvSeriesSet].map(tvSeries => tvSeries.title)),
-                    ...newTvSeries.keys(),
-                )) {
-                    newTvSeries.set(tvSeriesToInsert, new Set());
+                // add the found tv-series
+                if (scanningResult[MediaScan.TV_SERIES_TYPE] !== undefined) {
+                    // mapping for faster result(s)
+                    let newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
+                        result[tvSeries.title] = concat( (has(result, tvSeries.title)) ? result[tvSeries.title] : [] , tvSeries);
+                        return result;
+                    }, {});
+                    // fastest way to update things
+                    let newTvSeries = this.allTvSeries;
+                    forIn(newSeries, (seriesArray,seriesName) => {
+                        let resultSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
+                        newTvSeries.set(
+                            seriesName,
+                            new Set([...resultSet, ...seriesArray]),
+                        )
+                    });
+                    // update the stores var
+                    this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
                 }
 
-                // Second step : add the new files into the correct tvSeries Set
-                for (const tvSerie of uniq([...tvSeriesSet].map(tvSeries => tvSeries.title)) ){
-                    // get the current set for this tvSerie
-                    const currentTvSerie: Set<mediaScan.TPN_Extended> = newTvSeries.get(tvSerie);
-
-                    // find all the episodes in the new one for this serie
-                    const episodes = [...tvSeriesSet]
-                        .filter(episode => episode.title === tvSerie);
-
-                    // add them and updates newTvSeries
-                    newTvSeries.set(
-                        tvSerie,
-                        new Set([...currentTvSerie, ...episodes]),
-                    );
-                }
-
-                // updates the stores var
-                // workaround : const string enum aren't compiled correctly with Babel
-                this.stores.set(MediaScan.MOVIES_TYPE, newMovies);
-                this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
                 resolve();
             } catch (err) {
                 reject(err);
