@@ -1,7 +1,7 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn} from 'lodash';
+import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn, map, chain, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
@@ -78,7 +78,7 @@ module.exports = class MediaScan extends EventEmitter {
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
                     // store the result for next usage
-                    result[fileCategory] = concat( (has(result, fileCategory)) ? result[fileCategory] : [] , jsonFile);
+                    result[fileCategory] = concat((has(result, fileCategory)) ? result[fileCategory] : [], jsonFile);
                     return result;
                 }, {});
 
@@ -92,12 +92,12 @@ module.exports = class MediaScan extends EventEmitter {
                 if (scanningResult[MediaScan.TV_SERIES_TYPE] !== undefined) {
                     // mapping for faster result(s)
                     let newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
-                        result[tvSeries.title] = concat( (has(result, tvSeries.title)) ? result[tvSeries.title] : [] , tvSeries);
+                        result[tvSeries.title] = concat((has(result, tvSeries.title)) ? result[tvSeries.title] : [], tvSeries);
                         return result;
                     }, {});
                     // fastest way to update things
                     let newTvSeries = this.allTvSeries;
-                    forIn(newSeries, (seriesArray,seriesName) => {
+                    forIn(newSeries, (seriesArray, seriesName) => {
                         let resultSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
                         newTvSeries.set(
                             seriesName,
@@ -179,45 +179,63 @@ module.exports = class MediaScan extends EventEmitter {
     removeOldFiles(...files: string[]): Promise<any> {
         return new PromiseLib((resolve, reject) => {
             try {
-                // get the data to handle this case
-                // in the first group, we got all the tv series files and in the second, the movies
-                // workaround : const string enum aren't compiled correctly with Babel
-                const processData = partition(files, file =>
-                    this.categoryForFile.get(file) === MediaScan.TV_SERIES_TYPE);
-                // for movies, just an easy removal
-                // workaround : const string enum aren't compiled correctly with Babel
-                this.stores.set(
-                    MediaScan.MOVIES_TYPE,
-                    new Set([...this.allMovies]
-                        .filter(movie => !(processData[1].includes(movie.filePath)))),
+                // get the data to handle the two cases
+                const processData = partition(
+                    filter(
+                        map(
+                            files,
+                            (file) => {
+                                return {filePath: file, category: this.categoryForFile.get(file)};
+                            }
+                        ), (resultObject) => resultObject.category !== undefined
+                    ), file => file.category === MediaScan.TV_SERIES_TYPE
                 );
 
-                // for the tv-series, a bit more complicated
-                // first step : find the unique tv series of these files
-                const tvSeriesShows = uniq(processData[0]
-                    .map(file => this.parser(basename(file)).title));
-                // second step : foreach each series in tvSeriesShows
-                const newTvSeriesMap = this.allTvSeries;
-
-                for (const series of tvSeriesShows) {
-                    // get the set for this serie
-                    const filteredSet = new Set([...newTvSeriesMap.get(series)]
-                        .filter(episode =>
-                            !(processData[0].includes(episode.filePath))));
-                    // if the filtered set is empty => no more episodes for this series
-                    if (filteredSet.size === 0) {
-                        newTvSeriesMap.delete(series);
-                    } else newTvSeriesMap.set(series, filteredSet);
+                // for movies, just an easy removal
+                if (processData[1].length > 0){
+                    this.stores.set(
+                        MediaScan.MOVIES_TYPE,
+                        new Set(
+                            filter(...this.allMovies, (movie) => !some(map(processData[1], 'filePath'), movie.filePath))
+                        )
+                    );
                 }
 
-                // save the updated map
-                // workaround : const string enum aren't compiled correctly with Babel
-                this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeriesMap);
+                // for series , a bit more complex
+                if (processData[0].length > 0){
 
-                // remove the mapping
-                files.forEach((file) => {
+                    // Get the series and their files that will be deleted
+                    const seriesShows = reduce(processData[0], (result, file) => {
+                        const seriesName = this.parser(basename(file.filePath)).title;
+                        result[seriesName] = concat((has(result, seriesName)) ? result[seriesName] : [], file.filePath);
+                        return result;
+                    }, {});
+
+                    let newTvSeries = this.allTvSeries;
+                    // check if needed to store new Value
+                    let shouldUpdate = false;
+                    forIn(seriesShows, (seriesArray, seriesName) => {
+                        let previousSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
+                        let filteredSet: Set<mediaScan.TPN_Extended> = new Set(
+                            filter([...previousSet], (episode) => !includes(seriesArray, episode.filePath))
+                        );
+                        // should I update later ?
+                        if (previousSet.size !== filteredSet.size)
+                            shouldUpdate = true;
+                        // if the filtered set is empty => no more episodes for this series
+                        if (filteredSet.size === 0) {
+                            newTvSeries.delete(seriesName);
+                        } else newTvSeries.set(seriesName, filteredSet);
+                    });
+                    // save the updated map
+                    if (shouldUpdate)
+                        this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
+                }
+
+                // remove the mapping of each deleted file(s)
+                for (const file of files) {
                     this.categoryForFile.delete(file);
-                });
+                }
                 this.emit('removeOldFiles', {files});
                 resolve({
                     message: 'The files have been deleted from the library',
