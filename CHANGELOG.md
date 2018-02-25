@@ -1,3 +1,15 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/jy95/mediaScan/compare/v1.1.1...v1.1.2) (2018-02-25)
+
+
+### Perf
+
+* Set specific babel settings ([068aa48b30f45f6057d56b774d5f604dd1f9f88b](https://github.com/jy95/mediaScan/commit/068aa48b30f45f6057d56b774d5f604dd1f9f88b))
+
+### Test
+
+* Fix typo in test name ([592f5e0b8ecdb9884ff14c7066ba358407dfb781](https://github.com/jy95/mediaScan/commit/592f5e0b8ecdb9884ff14c7066ba358407dfb781))
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/jy95/mediaScan/compare/v1.1.0...v1.1.1) (2018-02-23)
 
