@@ -1,3 +1,19 @@
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/jy95/mediaScan/compare/v1.1.3...v1.1.4) (2018-03-05)
+
+
+### Chore
+
+* Update DevDependancies ([5a871e2be9b97d6000066f4eb9f3bcc45f098a5b](https://github.com/jy95/mediaScan/commit/5a871e2be9b97d6000066f4eb9f3bcc45f098a5b))
+
+### Docs
+
+* Add TypeScript types for this lib ([46ea8e4a38419f76590a9a2a7676b9c7b25fd665](https://github.com/jy95/mediaScan/commit/46ea8e4a38419f76590a9a2a7676b9c7b25fd665))
+
+### Refactor
+
+* Use implementation of toJSONObject for toJSON() ([a518fdf6639de1ccf4a1191bc2c7879ddde817c0](https://github.com/jy95/mediaScan/commit/a518fdf6639de1ccf4a1191bc2c7879ddde817c0))
+
 <a name="1.1.3"></a>
 ## [1.1.3](https://github.com/jy95/mediaScan/compare/v1.1.2...v1.1.3) (2018-02-25)
 
