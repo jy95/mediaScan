@@ -2,8 +2,8 @@
   "name": "mediascan",
   "version": "1.1.3",
   "description": "A scanner for media files that follows a user-provided naming convention",
-  "main": "./lib/MediaScan.js",
-  "types": "./lib/MediaScan.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
     "lib/"
   ],
@@ -12,7 +12,6 @@
     "semantic-release": "semantic-release -e ./config/release.config.js",
     "prepare": "npm run compile",
     "clean": "jest --clearCache",
-    "coverage": "cat ./coverage/lcov.info | coveralls",
     "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
     "type-check": "tsc"
   },
@@ -57,12 +56,12 @@
     "@babel/preset-typescript": "^7.0.0-beta.40",
     "@semantic-release/changelog": "^1.1.1",
     "@semantic-release/git": "^3.1.1",
-    "@types/jest": "^22.1.3",
+    "@types/jest": "^22.1.4",
     "@types/node": "^9.4.6",
-    "conventional-changelog-eslint": "^1.0.2",
-    "jest": "^22.3.0",
-    "semantic-release": "^14.0.3",
-    "ts-jest": "^22.0.4",
+    "conventional-changelog-eslint": "^1.0.5",
+    "jest": "^22.4.2",
+    "semantic-release": "^14.0.4",
+    "ts-jest": "^22.4.1",
     "typescript": "^2.7.2"
   },
   "greenkeeper": {

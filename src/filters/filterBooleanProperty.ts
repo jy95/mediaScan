@@ -1,8 +1,8 @@
 /** Provides a map with valid default properties */
-import MediaScan from "../declaration";
 import {filterDefaultProperties} from '../utils/utils_functions';
+import * as MediaScanTypes from "../MediaScanTypes";
 
-export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.filterTuple<boolean>[] {
+export function filterDefaultBooleanProperties(searchObject: MediaScanTypes.DefaultSearchParameters): MediaScanTypes.filterTuple<boolean>[] {
     const propertiesNames = ['extended', 'unrated', 'proper', 'repack', 'convert',
         'hardcoded', 'retail', 'remastered'];
     return filterDefaultProperties<boolean>(propertiesNames, searchObject, (value) => {
@@ -11,7 +11,7 @@ export function filterDefaultBooleanProperties(searchObject: MediaScan.DefaultSe
 }
 
 /** Filter the set based on boolean properties */
-export function filterByBoolean(set: Set<MediaScan.TPN>, propertiesMap: Map<string, boolean>): Set<MediaScan.TPN> {
+export function filterByBoolean(set: Set<MediaScanTypes.TPN>, propertiesMap: Map<string, boolean>): Set<MediaScanTypes.TPN> {
     // first step : get an array so that we can do filter/reduce stuff
     // second step : iterate the propertiesMap and do filter and return the filtered array
     // val[0] : the key ; val[1] : the value

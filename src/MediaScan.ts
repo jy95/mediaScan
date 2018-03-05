@@ -14,26 +14,24 @@ import {
 }
     from './filters/filterProperties';
 import {defaultWhichCategoryFunction, promisifiedAccess} from './utils/utils_functions';
-
-// Typescript types
-import mediaScan from "./declaration";
+import * as MediaScanTypes from "./MediaScanTypes";
 
 /**
  * Class representing the MediaScan Library
  * @extends {EventEmitter}
  */
-module.exports = class MediaScan extends EventEmitter {
+class MediaScan extends EventEmitter {
 
     protected defaultPath: string; // Default path , if paths is empty
-    protected parser: mediaScan.ParseFunction; // the parser to extract the useful data from name
-    protected whichCategory: mediaScan.WhichCategoryFunction; // Function that tell us what is the category of the TPN
+    protected parser: MediaScanTypes.ParseFunction; // the parser to extract the useful data from name
+    protected whichCategory: MediaScanTypes.WhichCategoryFunction; // Function that tell us what is the category of the TPN
     protected paths: string[]; // all the paths that will be explored
-    protected categoryForFile: Map<string, mediaScan.Category>; // the mapping between file and Category
-    protected stores: mediaScan.MapSet<mediaScan.TPN | mediaScan.TPN_Extended>; // where I keep the result of Category
+    protected categoryForFile: Map<string, MediaScanTypes.Category>; // the mapping between file and Category
+    protected stores: MediaScanTypes.MapSet<MediaScanTypes.TPN | MediaScanTypes.TPN_Extended>; // where I keep the result of Category
     // constants getter for external purposes (example create a custom whichCategory function)
     // workaround : const string enum aren't compiled correctly with Babel
-    static readonly MOVIES_TYPE = 'MOVIES' as mediaScan.Category.MOVIES_TYPE;
-    static readonly TV_SERIES_TYPE = 'TV_SERIES' as mediaScan.Category.TV_SERIES_TYPE;
+    static readonly MOVIES_TYPE = 'MOVIES' as MediaScanTypes.Category.MOVIES_TYPE;
+    static readonly TV_SERIES_TYPE = 'TV_SERIES' as MediaScanTypes.Category.TV_SERIES_TYPE;
 
     constructor({
                     defaultPath = process.cwd(),
@@ -41,11 +39,11 @@ module.exports = class MediaScan extends EventEmitter {
                     allFilesWithCategory = new Map(),
                     movies = new Set(),
                     series = new Map(),
-                }: mediaScan.DataParameters = {},
+                }: MediaScanTypes.DataParameters = {},
                 {
                     parser = nameParser,
                     whichCategory = defaultWhichCategoryFunction,
-                }: mediaScan.CustomFunctionsConfig = {}) {
+                }: MediaScanTypes.CustomFunctionsConfig = {}) {
         super();
         this.parser = parser;
         this.whichCategory = whichCategory;
@@ -216,7 +214,7 @@ module.exports = class MediaScan extends EventEmitter {
                     let shouldUpdate = false;
                     forIn(seriesShows, (seriesArray, seriesName) => {
                         let previousSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
-                        let filteredSet: Set<mediaScan.TPN_Extended> = new Set(
+                        let filteredSet: Set<MediaScanTypes.TPN_Extended> = new Set(
                             filter([...previousSet], (episode) => !includes(seriesArray, episode.filePath))
                         );
                         // should I update later ?
@@ -251,12 +249,12 @@ module.exports = class MediaScan extends EventEmitter {
         }).bind(this);
     }
 
-    get allMovies(): Set<mediaScan.TPN_Extended> {
+    get allMovies(): Set<MediaScanTypes.TPN_Extended> {
         // workaround : const string enum aren't compiled correctly with Babel
         return cloneDeep(this.stores.get(MediaScan.MOVIES_TYPE));
     }
 
-    get allTvSeries(): Map<string, Set<mediaScan.TPN_Extended>> {
+    get allTvSeries(): Map<string, Set<MediaScanTypes.TPN_Extended>> {
         // workaround : const string enum aren't compiled correctly with Babel
         return cloneDeep(this.stores.get(MediaScan.TV_SERIES_TYPE));
     }
@@ -267,19 +265,11 @@ module.exports = class MediaScan extends EventEmitter {
 
     // full data of lib as JSON string
     toJSON(): string {
-        const tvSeries = this.allTvSeries;
-        return `{
-    "paths":${JSON.stringify([...this.paths])},
-    "allFilesWithCategory":${JSON.stringify([...this.allFilesWithCategory])},
-    "movies":${JSON.stringify([...this.allMovies])},
-    "series":${JSON.stringify([...tvSeries].map(serie =>
-            // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
-            [serie[0], [...tvSeries.get(serie[0])]]))}
-    }`.trim();
+        return JSON.stringify(this.toJSONObject());
     }
 
     // data as a JSON object
-    toJSONObject(looseMode? : boolean) : mediaScan.LibAsJson {
+    toJSONObject(looseMode? : boolean) : MediaScanTypes.LibAsJson {
         // if in loose Mode , the objects will only contains the mapping between filepath and Category
         const toBeSerialized = (looseMode)
             ? [ ["allFilesWithCategory", [...this.allFilesWithCategory] ] ]
@@ -299,8 +289,8 @@ module.exports = class MediaScan extends EventEmitter {
         }, {});
     }
 
-    static createFromJSON(json: mediaScan.LibAsJson, customConfig?: mediaScan.CustomFunctionsConfig): MediaScan {
-        let config: mediaScan.DataParameters = {};
+    static createFromJSON(json: MediaScanTypes.LibAsJson, customConfig?: MediaScanTypes.CustomFunctionsConfig): MediaScan {
+        let config: MediaScanTypes.DataParameters = {};
         // transform the param
         /* istanbul ignore else */
         if (json.allFilesWithCategory) {
@@ -325,12 +315,15 @@ module.exports = class MediaScan extends EventEmitter {
         return new MediaScan(config, customConfig);
     }
 
-    filterMovies(searchParameters: mediaScan.SearchParameters = {}) {
+    filterMovies(searchParameters: MediaScanTypes.SearchParameters = {}) {
         // apply params based on types
         return filterMoviesByProperties(searchParameters, this.allMovies);
     }
 
-    filterTvSeries(searchParameters: mediaScan.SearchParameters = {}) {
+    filterTvSeries(searchParameters: MediaScanTypes.SearchParameters = {}) {
         return filterTvSeriesByProperties(searchParameters, this.allTvSeries);
     }
-};
+}
+
+// just to be sure Babel doesn't mess up common js
+module.exports = MediaScan;
