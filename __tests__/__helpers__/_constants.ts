@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import {join} from 'path';
 
-export const MediaScan = require('../../lib/MediaScan');
+export const MediaScan = require('../../index.js');
 
 export const folders = ['folder1', 'folder2'];
 

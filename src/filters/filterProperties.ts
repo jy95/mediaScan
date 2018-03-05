@@ -23,10 +23,11 @@ import {
 import {
     filterByString, filterDefaultStringProperties, meetStringSpec,
 } from './filterStringProperty';
-import MediaScan from "../declaration";
+import * as MediaScanTypes from "../MediaScanTypes";
 
-function mapProperties(searchParameters: MediaScan.SearchParameters): {
-    booleanFieldsSearchMap: Map<string, boolean>, numberFieldsSearchMap: Map<string, MediaScan.NumberExpressionObject>,
+
+function mapProperties(searchParameters: MediaScanTypes.SearchParameters): {
+    booleanFieldsSearchMap: Map<string, boolean>, numberFieldsSearchMap: Map<string, MediaScanTypes.NumberExpressionObject>,
     stringFieldsSearchMap: Map<string, string | string[]>
 } {
 
@@ -37,7 +38,7 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
         <[string, boolean][]>
             [
                 ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'boolean' as MediaScan.AdditionalPropertiesType.BOOLEAN)
+                    .filter(newProperty => newProperty.type === 'boolean' as MediaScanTypes.AdditionalPropertiesType.BOOLEAN)
                     .reduce((sub_acc, {name, value}) => {
                         /* istanbul ignore else */
                         if (meetBooleanSpec(value))
@@ -50,10 +51,10 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
     );
 
     const numberFieldsSearchMap = new Map(
-        <[string, MediaScan.NumberExpressionObject][]>
+        <[string, MediaScanTypes.NumberExpressionObject][]>
             [
                 ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'number' as MediaScan.AdditionalPropertiesType.NUMBER)
+                    .filter(newProperty => newProperty.type === 'number' as MediaScanTypes.AdditionalPropertiesType.NUMBER)
                     .reduce((sub_acc, {name, value}) => {
                         /* istanbul ignore else */
                         if (meetNumberSpec(value))
@@ -69,7 +70,7 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
         <[string, string | string[]][]>
             [
                 ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'string' as MediaScan.AdditionalPropertiesType.STRING)
+                    .filter(newProperty => newProperty.type === 'string' as MediaScanTypes.AdditionalPropertiesType.STRING)
                     .reduce((sub_acc, {name, value}) => {
                         /* istanbul ignore else */
                         if (meetStringSpec(value))
@@ -89,12 +90,12 @@ function mapProperties(searchParameters: MediaScan.SearchParameters): {
 }
 
 /** Filter the movies based on search parameters */
-export function filterMoviesByProperties(searchParameters: MediaScan.SearchParameters, allMovies: Set<MediaScan.TPN>): Set<MediaScan.TPN> {
+export function filterMoviesByProperties(searchParameters: MediaScanTypes.SearchParameters, allMovies: Set<MediaScanTypes.TPN>): Set<MediaScanTypes.TPN> {
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
     } = mapProperties(searchParameters);
-    const filterStuff: MediaScan.filterFunctionTuple[] = [
+    const filterStuff: MediaScanTypes.filterFunctionTuple[] = [
         [filterByBoolean, booleanFieldsSearchMap],
         [filterByString, stringFieldsSearchMap],
         [filterByNumber, numberFieldsSearchMap]
@@ -106,12 +107,12 @@ export function filterMoviesByProperties(searchParameters: MediaScan.SearchParam
 }
 
 /** Filter the tv series based on search parameters */
-export function filterTvSeriesByProperties(searchParameters: MediaScan.SearchParameters, allTvSeries: Map<string, Set<MediaScan.TPN>>): Map<string, Set<MediaScan.TPN>> {
+export function filterTvSeriesByProperties(searchParameters: MediaScanTypes.SearchParameters, allTvSeries: Map<string, Set<MediaScanTypes.TPN>>): Map<string, Set<MediaScanTypes.TPN>> {
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
     } = mapProperties(searchParameters);
-    const filterStuff: MediaScan.filterFunctionTuple[] = [
+    const filterStuff: MediaScanTypes.filterFunctionTuple[] = [
         [filterByBoolean, booleanFieldsSearchMap],
         [filterByString, stringFieldsSearchMap],
         [filterByNumber, numberFieldsSearchMap]

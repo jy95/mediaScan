@@ -1,8 +1,8 @@
 /** Provides a map with valid default properties */
-import MediaScan from "../declaration";
 import {filterDefaultProperties} from "../utils/utils_functions";
+import * as MediaScanTypes from "../MediaScanTypes";
 
-export function filterDefaultStringProperties(searchObject: MediaScan.DefaultSearchParameters): MediaScan.filterTuple<string|string[]>[] {
+export function filterDefaultStringProperties(searchObject: MediaScanTypes.DefaultSearchParameters): MediaScanTypes.filterTuple<string|string[]>[] {
     const propertiesNames = ['title', 'resolution', 'codec', 'audio', 'group',
         'region', 'container', 'language', 'source'];
     return filterDefaultProperties<string|string[]>(propertiesNames, searchObject, (value) => {
@@ -11,7 +11,7 @@ export function filterDefaultStringProperties(searchObject: MediaScan.DefaultSea
 }
 
 /** Filter function for filterByString */
-function filterFunctionByType(property: string, expected: string[] | string, object: MediaScan.TPN): boolean {
+function filterFunctionByType(property: string, expected: string[] | string, object: MediaScanTypes.TPN): boolean {
     if (Array.isArray(expected)) {
         return expected.includes(object[property]);
     }
@@ -19,7 +19,7 @@ function filterFunctionByType(property: string, expected: string[] | string, obj
 }
 
 /** Filter the set based on string properties */
-export function filterByString(set: Set<MediaScan.TPN>, propertiesMap: Map<string, string | string[]>): Set<MediaScan.TPN> {
+export function filterByString(set: Set<MediaScanTypes.TPN>, propertiesMap: Map<string, string | string[]>): Set<MediaScanTypes.TPN> {
     // first step : get an array so that we can do filter/reduce stuff
     // second step : iterate the propertiesMap and do filter and return the filtered array
     // val[0] : the key ; val[1] : the value

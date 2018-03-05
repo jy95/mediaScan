@@ -1,11 +1,11 @@
-import MediaScan from "../declaration";
+import * as MediaScanTypes from "../MediaScanTypes";
 import {filterDefaultProperties} from "../utils/utils_functions";
 
 const validExpression = /^(==|>|<|>=|<=)(\d+)$/;
 /**
  * Convert the param to valid expression object for filter function
  */
-export function convertToValidExpression(param: string | number): MediaScan.NumberExpressionObject {
+export function convertToValidExpression(param: string | number): MediaScanTypes.NumberExpressionObject {
     let returnValue;
 
     switch (typeof param) {
@@ -36,23 +36,23 @@ export function convertToValidExpression(param: string | number): MediaScan.Numb
 /**
  * Filter function for filterByNumber
  */
-function resolveExpression(property: string, expressionObject: MediaScan.NumberExpressionObject, object: MediaScan.TPN | MediaScan.TPN_Extended): boolean {
+function resolveExpression(property: string, expressionObject: MediaScanTypes.NumberExpressionObject, object: MediaScanTypes.TPN | MediaScanTypes.TPN_Extended): boolean {
     let {operator, number} = expressionObject;
     // No : eval is not all evil but you should know what you are doing
     // eslint-disable-next-line no-eval
     return eval(`${object[property]}${operator}${number}`);
 }
 
-export function filterDefaultNumberProperties(searchObject: MediaScan.DefaultSearchParameters) : MediaScan.filterTuple<MediaScan.NumberExpressionObject>[] {
+export function filterDefaultNumberProperties(searchObject: MediaScanTypes.DefaultSearchParameters) : MediaScanTypes.filterTuple<MediaScanTypes.NumberExpressionObject>[] {
     const propertiesNames = ['season', 'episode', 'year'];
-    return filterDefaultProperties<MediaScan.NumberExpressionObject>(propertiesNames, searchObject, (value) => {
+    return filterDefaultProperties<MediaScanTypes.NumberExpressionObject>(propertiesNames, searchObject, (value) => {
         return meetNumberSpec(value);
     }, (key, value) => [key, convertToValidExpression(value)]);
 }
 
 /** Filter the set based on string properties */
 // export function filterByNumber(set: Set<TPN>, propertiesMap: Map<string, numberExpressionObject>) : Set<TPN>
-export function filterByNumber(set: Set<MediaScan.TPN>, propertiesMap: Map<string, MediaScan.NumberExpressionObject>): Set<MediaScan.TPN> {
+export function filterByNumber(set: Set<MediaScanTypes.TPN>, propertiesMap: Map<string, MediaScanTypes.NumberExpressionObject>): Set<MediaScanTypes.TPN> {
     // first step : get an array so that we can do filter/reduce stuff
     // second step : iterate the propertiesMap and do filter and return the filtered array
     // val[0] : the key ; val[1] : the value
