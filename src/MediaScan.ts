@@ -265,15 +265,7 @@ class MediaScan extends EventEmitter {
 
     // full data of lib as JSON string
     toJSON(): string {
-        const tvSeries = this.allTvSeries;
-        return `{
-    "paths":${JSON.stringify([...this.paths])},
-    "allFilesWithCategory":${JSON.stringify([...this.allFilesWithCategory])},
-    "movies":${JSON.stringify([...this.allMovies])},
-    "series":${JSON.stringify([...tvSeries].map(serie =>
-            // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
-            [serie[0], [...tvSeries.get(serie[0])]]))}
-    }`.trim();
+        return JSON.stringify(this.toJSONObject());
     }
 
     // data as a JSON object
