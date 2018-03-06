@@ -29,9 +29,8 @@ class MediaScan extends EventEmitter {
     protected categoryForFile: Map<string, MediaScanTypes.Category>; // the mapping between file and Category
     protected stores: MediaScanTypes.MapSet<MediaScanTypes.TPN | MediaScanTypes.TPN_Extended>; // where I keep the result of Category
     // constants getter for external purposes (example create a custom whichCategory function)
-    // workaround : const string enum aren't compiled correctly with Babel
-    static readonly MOVIES_TYPE = 'MOVIES' as MediaScanTypes.Category.MOVIES_TYPE;
-    static readonly TV_SERIES_TYPE = 'TV_SERIES' as MediaScanTypes.Category.TV_SERIES_TYPE;
+    static readonly MOVIES_TYPE = MediaScanTypes.Category.MOVIES_TYPE;
+    static readonly TV_SERIES_TYPE = MediaScanTypes.Category.TV_SERIES_TYPE;
 
     constructor({
                     defaultPath = process.cwd(),
@@ -50,7 +49,6 @@ class MediaScan extends EventEmitter {
         this.defaultPath = defaultPath;
         this.paths = paths;
         this.stores = new Map();
-        // workaround : const string enum aren't compiled correctly with Babel
         this.stores.set(MediaScan.MOVIES_TYPE, movies);
         this.stores.set(MediaScan.TV_SERIES_TYPE, series);
         this.categoryForFile = allFilesWithCategory;
@@ -250,12 +248,10 @@ class MediaScan extends EventEmitter {
     }
 
     get allMovies(): Set<MediaScanTypes.TPN_Extended> {
-        // workaround : const string enum aren't compiled correctly with Babel
         return cloneDeep(this.stores.get(MediaScan.MOVIES_TYPE));
     }
 
     get allTvSeries(): Map<string, Set<MediaScanTypes.TPN_Extended>> {
-        // workaround : const string enum aren't compiled correctly with Babel
         return cloneDeep(this.stores.get(MediaScan.TV_SERIES_TYPE));
     }
 
