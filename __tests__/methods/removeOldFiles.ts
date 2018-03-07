@@ -133,9 +133,11 @@ describe('removeOldFiles', () => {
                     ],
                 ],
             ],
-        }, {});
+        }, {
+            parser : {}
+        });
         const eventSpy = jest.spyOn(libInstance, 'removeOldFiles');
-        await expect(libInstance.removeOldFiles(...files)).rejects;
+        await expect(libInstance.removeOldFiles(...files)).rejects.toThrowError();
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);
     });
