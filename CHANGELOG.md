@@ -1,3 +1,11 @@
+<a name="1.1.5"></a>
+## [1.1.5](https://github.com/jy95/mediaScan/compare/v1.1.4...v1.1.5) (2018-03-07)
+
+
+### Refactor
+
+* Trying to fix typings for package ([627571c90c003ec94d4dda0cab15dcbeec426a2c](https://github.com/jy95/mediaScan/commit/627571c90c003ec94d4dda0cab15dcbeec426a2c))
+
 <a name="1.1.4"></a>
 ## [1.1.4](https://github.com/jy95/mediaScan/compare/v1.1.3...v1.1.4) (2018-03-05)
 
