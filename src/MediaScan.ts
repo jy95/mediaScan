@@ -1,12 +1,15 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn, map, chain, filter, some, includes} from 'lodash';
+import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn, map, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
+
+// transducers operators
+const t = require("transducers.js");
 
 // local import
 import {
@@ -176,15 +179,18 @@ class MediaScan extends EventEmitter {
         return new PromiseLib((resolve, reject) => {
             try {
                 // get the data to handle the two cases
+                let mapCategoryFiles = t.compose(
+                    t.map(
+                        file => {
+                            return {filePath: file, category: this.categoryForFile.get(file)};
+                        }
+                    ),
+                    t.filter( resultObject => resultObject.category !== undefined )
+                );
+
                 const processData = partition(
-                    filter(
-                        map(
-                            files,
-                            (file) => {
-                                return {filePath: file, category: this.categoryForFile.get(file)};
-                            }
-                        ), (resultObject) => resultObject.category !== undefined
-                    ), file => file.category === MediaScan.TV_SERIES_TYPE
+                    t.into([], mapCategoryFiles, files),
+                        file => file.category === MediaScan.TV_SERIES_TYPE
                 );
 
                 // for movies, just an easy removal

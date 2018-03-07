@@ -40,47 +40,41 @@ function mapProperties(searchParameters: MediaScanTypes.SearchParameters): {
 
     const booleanFieldsSearchMap = new Map(
         <[string, boolean][]>
-            [
-                ...t.into([],
-                    t.compose(
-                        t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.BOOLEAN)),
-                        t.filter( ({value}) => meetBooleanSpec(value) ),
-                        t.map( ( {name, value} ) => [name, value])
-                    ),
-                    additionalProperties
+            t.into(
+                filterDefaultBooleanProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.BOOLEAN)),
+                    t.filter(({value}) => meetBooleanSpec(value)),
+                    t.map(({name, value}) => [name, value])
                 ),
-                ...filterDefaultBooleanProperties(searchParameters)
-            ]
+                additionalProperties
+            )
     );
 
     const numberFieldsSearchMap = new Map(
         <[string, MediaScanTypes.NumberExpressionObject][]>
-            [
-                ...t.into([],
-                    t.compose(
-                        t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.NUMBER)),
-                        t.filter( ({value}) => meetNumberSpec(value) ),
-                        t.map( ( {name, value} ) => [name, convertToValidExpression(value as number | string)])
-                    ),
-                    additionalProperties
+            t.into(
+                filterDefaultNumberProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.NUMBER)),
+                    t.filter(({value}) => meetNumberSpec(value)),
+                    t.map(({name, value}) => [name, convertToValidExpression(value as number | string)])
                 ),
-                ...filterDefaultNumberProperties(searchParameters)
-            ]
+                additionalProperties
+            )
     );
 
     const stringFieldsSearchMap = new Map(
         <[string, string | string[]][]>
-            [
-                ...t.into([],
-                    t.compose(
-                        t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.STRING)),
-                        t.filter( ({value}) => meetStringSpec(value) ),
-                        t.map( ( {name, value} ) => [name, value])
-                    ),
-                    additionalProperties
+            t.into(
+                filterDefaultStringProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.STRING)),
+                    t.filter(({value}) => meetStringSpec(value)),
+                    t.map(({name, value}) => [name, value])
                 ),
-                ...filterDefaultStringProperties(searchParameters)
-            ]
+                additionalProperties
+            )
     );
 
     return {
@@ -103,8 +97,12 @@ export function filterMoviesByProperties(searchParameters: MediaScanTypes.Search
     ];
 
     return filterStuff
-        .reduce((processingResult, [filterFunction, propertiesMap]) => filterFunction(processingResult, propertiesMap)
-            , allMovies);
+        .reduce(
+            (processingResult, [filterFunction, propertiesMap]) => {
+                return processingResult.size > 0 && propertiesMap.size > 0 ? filterFunction(processingResult, propertiesMap) : processingResult;
+            }
+            , allMovies
+        );
 }
 
 /** Filter the tv series based on search parameters */
