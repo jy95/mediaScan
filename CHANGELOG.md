@@ -1,3 +1,17 @@
+<a name="1.1.6"></a>
+## [1.1.6](https://github.com/jy95/mediaScan/compare/v1.1.5...v1.1.6) (2018-03-08)
+
+
+### Perf
+
+* Transducers for mapProperties ([d9e5d84d4597fe5adb404ca8e4e3aca1ca130355](https://github.com/jy95/mediaScan/commit/d9e5d84d4597fe5adb404ca8e4e3aca1ca130355))
+* Transducers version of removeOldFiles ([e40c721f7ed8ad7719eae94843556e882edbdb7c](https://github.com/jy95/mediaScan/commit/e40c721f7ed8ad7719eae94843556e882edbdb7c))
+* Use transducers.js to make filter functions faster ([0049824a7c0985a6f1de3f5fc44419b542db1891](https://github.com/jy95/mediaScan/commit/0049824a7c0985a6f1de3f5fc44419b542db1891))
+
+### Test
+
+* Fix coverage issue in removeOldFiles ([b3351829fb91e92d8c6d4ce3fbb3ecffa875368b](https://github.com/jy95/mediaScan/commit/b3351829fb91e92d8c6d4ce3fbb3ecffa875368b))
+
 <a name="1.1.5"></a>
 ## [1.1.5](https://github.com/jy95/mediaScan/compare/v1.1.4...v1.1.5) (2018-03-07)
 
