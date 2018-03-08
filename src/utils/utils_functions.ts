@@ -1,6 +1,8 @@
 // Check properties
 import {access, constants as FsConstants} from "fs";
 import PromiseLib from 'bluebird';
+// transducers operators
+const t = require("transducers.js");
 import * as MediaScanTypes from "../MediaScanTypes";
 
 export function checkProperties(obj, properties): boolean {
@@ -23,16 +25,16 @@ export function promisifiedAccess(path) : Promise<any> {
 export function defaultWhichCategoryFunction(object : MediaScanTypes.TPN) : MediaScanTypes.Category{
     // workaround : const string enum aren't compiled correctly with Babel
     return (checkProperties(object, ['season', 'episode']))
-        ? 'TV_SERIES' as MediaScanTypes.Category.TV_SERIES_TYPE : 'MOVIES' as MediaScanTypes.Category.MOVIES_TYPE;
+        ? MediaScanTypes.Category.TV_SERIES_TYPE : MediaScanTypes.Category.MOVIES_TYPE;
 }
 
 // Generic filter for default properties
 export function filterDefaultProperties<T>(propertiesNames : string[],
                                            search : MediaScanTypes.SearchParameters, meetSpecFunction : (value) => boolean,
                                            transformFunction : (key : string, value) => MediaScanTypes.filterTuple<T> ) : MediaScanTypes.filterTuple<T>[]  {
-    return propertiesNames.reduce( (acc, currentProperty) => {
-        if (meetSpecFunction(search[currentProperty]))
-            acc.push(transformFunction(currentProperty, search[currentProperty]));
-        return acc;
-    }, []);
+    // transformations
+    let meetRequirement = (currentProperty) => meetSpecFunction(search[currentProperty]);
+    let transformResult = (currentProperty) => transformFunction(currentProperty, search[currentProperty]);
+    let transformations = t.compose(t.filter(meetRequirement), t.map(transformResult));
+    return t.into([], transformations, propertiesNames);
 }

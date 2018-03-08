@@ -1,4 +1,6 @@
 /* eslint-disable no-useless-escape,max-len */
+// transducers operators
+const t = require("transducers.js");
 /**
  * Boolean properties filter
  */
@@ -34,52 +36,45 @@ function mapProperties(searchParameters: MediaScanTypes.SearchParameters): {
     // organize search based on field type : boolean - string - number . Now optimized by Me XD
     // add the optional new properties , optionally provided by user
     let additionalProperties = (searchParameters.additionalProperties === undefined) ? [] : searchParameters.additionalProperties;
+    let filterAdditionalProperties = (type) => (newProperty) => newProperty.type === type;
+
     const booleanFieldsSearchMap = new Map(
         <[string, boolean][]>
-            [
-                ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'boolean' as MediaScanTypes.AdditionalPropertiesType.BOOLEAN)
-                    .reduce((sub_acc, {name, value}) => {
-                        /* istanbul ignore else */
-                        if (meetBooleanSpec(value))
-                            sub_acc.push([name, value]);
-                        return sub_acc;
-                    }, [])
-                ,
-                ...filterDefaultBooleanProperties(searchParameters)
-            ]
+            t.into(
+                filterDefaultBooleanProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.BOOLEAN)),
+                    t.filter(({value}) => meetBooleanSpec(value)),
+                    t.map(({name, value}) => [name, value])
+                ),
+                additionalProperties
+            )
     );
 
     const numberFieldsSearchMap = new Map(
         <[string, MediaScanTypes.NumberExpressionObject][]>
-            [
-                ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'number' as MediaScanTypes.AdditionalPropertiesType.NUMBER)
-                    .reduce((sub_acc, {name, value}) => {
-                        /* istanbul ignore else */
-                        if (meetNumberSpec(value))
-                            sub_acc.push([name, convertToValidExpression(value as number | string)]);
-                        return sub_acc;
-                    }, [])
-                ,
-                ...filterDefaultNumberProperties(searchParameters)
-            ]
+            t.into(
+                filterDefaultNumberProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.NUMBER)),
+                    t.filter(({value}) => meetNumberSpec(value)),
+                    t.map(({name, value}) => [name, convertToValidExpression(value as number | string)])
+                ),
+                additionalProperties
+            )
     );
 
     const stringFieldsSearchMap = new Map(
         <[string, string | string[]][]>
-            [
-                ...additionalProperties
-                    .filter(newProperty => newProperty.type === 'string' as MediaScanTypes.AdditionalPropertiesType.STRING)
-                    .reduce((sub_acc, {name, value}) => {
-                        /* istanbul ignore else */
-                        if (meetStringSpec(value))
-                            sub_acc.push([name, value]);
-                        return sub_acc;
-                    }, [])
-                ,
-                ...filterDefaultStringProperties(searchParameters)
-            ]
+            t.into(
+                filterDefaultStringProperties(searchParameters),
+                t.compose(
+                    t.filter(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.STRING)),
+                    t.filter(({value}) => meetStringSpec(value)),
+                    t.map(({name, value}) => [name, value])
+                ),
+                additionalProperties
+            )
     );
 
     return {
@@ -102,8 +97,12 @@ export function filterMoviesByProperties(searchParameters: MediaScanTypes.Search
     ];
 
     return filterStuff
-        .reduce((processingResult, [filterFunction, propertiesMap]) => filterFunction(processingResult, propertiesMap)
-            , allMovies);
+        .reduce(
+            (processingResult, [filterFunction, propertiesMap]) => {
+                return processingResult.size > 0 && propertiesMap.size > 0 ? filterFunction(processingResult, propertiesMap) : processingResult;
+            }
+            , allMovies
+        );
 }
 
 /** Filter the tv series based on search parameters */

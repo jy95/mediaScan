@@ -1,12 +1,15 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, partition, cloneDeep, reduce, concat, has, forIn, map, chain, filter, some, includes} from 'lodash';
+import {uniq, difference, cloneDeep, reduce, concat, has, forIn, map, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
+
+// transducers operators
+const t = require("transducers.js");
 
 // local import
 import {
@@ -29,9 +32,8 @@ class MediaScan extends EventEmitter {
     protected categoryForFile: Map<string, MediaScanTypes.Category>; // the mapping between file and Category
     protected stores: MediaScanTypes.MapSet<MediaScanTypes.TPN | MediaScanTypes.TPN_Extended>; // where I keep the result of Category
     // constants getter for external purposes (example create a custom whichCategory function)
-    // workaround : const string enum aren't compiled correctly with Babel
-    static readonly MOVIES_TYPE = 'MOVIES' as MediaScanTypes.Category.MOVIES_TYPE;
-    static readonly TV_SERIES_TYPE = 'TV_SERIES' as MediaScanTypes.Category.TV_SERIES_TYPE;
+    static readonly MOVIES_TYPE = MediaScanTypes.Category.MOVIES_TYPE;
+    static readonly TV_SERIES_TYPE = MediaScanTypes.Category.TV_SERIES_TYPE;
 
     constructor({
                     defaultPath = process.cwd(),
@@ -50,7 +52,6 @@ class MediaScan extends EventEmitter {
         this.defaultPath = defaultPath;
         this.paths = paths;
         this.stores = new Map();
-        // workaround : const string enum aren't compiled correctly with Babel
         this.stores.set(MediaScan.MOVIES_TYPE, movies);
         this.stores.set(MediaScan.TV_SERIES_TYPE, series);
         this.categoryForFile = allFilesWithCategory;
@@ -177,33 +178,43 @@ class MediaScan extends EventEmitter {
     removeOldFiles(...files: string[]): Promise<any> {
         return new PromiseLib((resolve, reject) => {
             try {
-                // get the data to handle the two cases
-                const processData = partition(
-                    filter(
-                        map(
-                            files,
-                            (file) => {
-                                return {filePath: file, category: this.categoryForFile.get(file)};
-                            }
-                        ), (resultObject) => resultObject.category !== undefined
-                    ), file => file.category === MediaScan.TV_SERIES_TYPE
+                // transformations for transducers
+                let mapCategoryFiles = t.compose(
+                    t.map(
+                        file => {
+                            return {filePath: file, category: this.categoryForFile.get(file)};
+                        }
+                    ),
+                    t.filter( resultObject => resultObject.category !== undefined )
                 );
+                let filterContentType = (requestedType) => (file) => file.category === requestedType;
+
+                // processing
+                const mappedFiles = t.into([], mapCategoryFiles, files);
+
+                // movies files
+                const moviesFiles = filter(mappedFiles, filterContentType(MediaScan.MOVIES_TYPE));
+                const moviesFilePaths = map(moviesFiles, 'filePath');
 
                 // for movies, just an easy removal
-                if (processData[1].length > 0){
+                if (moviesFiles.length > 0){
+                    // update the filtered Set
                     this.stores.set(
                         MediaScan.MOVIES_TYPE,
                         new Set(
-                            filter(...this.allMovies, (movie) => !some(map(processData[1], 'filePath'), movie.filePath))
+                            filter(...this.allMovies, (movie) => !some(moviesFilePaths, movie.filePath))
                         )
                     );
                 }
 
+                // tv-series
+                const seriesFiles = filter(mappedFiles, filterContentType(MediaScan.TV_SERIES_TYPE));
+
                 // for series , a bit more complex
-                if (processData[0].length > 0){
+                if (seriesFiles.length > 0){
 
                     // Get the series and their files that will be deleted
-                    const seriesShows = reduce(processData[0], (result, file) => {
+                    const seriesShows = reduce(seriesFiles, (result, file) => {
                         const seriesName = this.parser(basename(file.filePath)).title;
                         result[seriesName] = concat((has(result, seriesName)) ? result[seriesName] : [], file.filePath);
                         return result;
@@ -250,16 +261,14 @@ class MediaScan extends EventEmitter {
     }
 
     get allMovies(): Set<MediaScanTypes.TPN_Extended> {
-        // workaround : const string enum aren't compiled correctly with Babel
-        return cloneDeep(this.stores.get(MediaScan.MOVIES_TYPE));
+        return this.stores.get(MediaScan.MOVIES_TYPE) as Set<MediaScanTypes.TPN_Extended>;
     }
 
     get allTvSeries(): Map<string, Set<MediaScanTypes.TPN_Extended>> {
-        // workaround : const string enum aren't compiled correctly with Babel
-        return cloneDeep(this.stores.get(MediaScan.TV_SERIES_TYPE));
+        return this.stores.get(MediaScan.TV_SERIES_TYPE) as Map<string, Set<MediaScanTypes.TPN_Extended>>;
     }
 
-    get allFilesWithCategory(): Map<string, string> {
+    get allFilesWithCategory(): Map<string, MediaScanTypes.Category> {
         return cloneDeep(this.categoryForFile);
     }
 

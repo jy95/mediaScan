@@ -46,6 +46,7 @@
     "filehound": "^1.16.2",
     "lodash": "^4.17.5",
     "parse-torrent-title": "^1.1.0",
+    "transducers.js": "^0.3.2",
     "video-extensions": "^1.1.0"
   },
   "devDependencies": {
