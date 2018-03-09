@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape,max-len */
 // transducers operators
 const t = require("transducers.js");
+import {isEmpty} from 'lodash';
 /**
  * Boolean properties filter
  */
@@ -86,6 +87,10 @@ function mapProperties(searchParameters: MediaScanTypes.SearchParameters): {
 
 /** Filter the movies based on search parameters */
 export function filterMoviesByProperties(searchParameters: MediaScanTypes.SearchParameters, allMovies: Set<MediaScanTypes.TPN>): Set<MediaScanTypes.TPN> {
+    // Check if empty - for faster result
+    if (isEmpty(searchParameters))
+        return allMovies;
+
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
@@ -107,6 +112,10 @@ export function filterMoviesByProperties(searchParameters: MediaScanTypes.Search
 
 /** Filter the tv series based on search parameters */
 export function filterTvSeriesByProperties(searchParameters: MediaScanTypes.SearchParameters, allTvSeries: Map<string, Set<MediaScanTypes.TPN>>): Map<string, Set<MediaScanTypes.TPN>> {
+    // Check if empty for faster result
+    if (isEmpty(searchParameters))
+        return allTvSeries;
+
     const {
         booleanFieldsSearchMap, stringFieldsSearchMap,
         numberFieldsSearchMap,
