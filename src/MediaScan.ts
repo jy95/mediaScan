@@ -290,12 +290,13 @@ class MediaScan extends EventEmitter {
                 ["paths", [...this.paths] ],
                 ["allFilesWithCategory", [...this.allFilesWithCategory] ],
                 ["movies", [...this.allMovies]],
-                ["series", [...this.allTvSeries].map(
-                    // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
-                    series => [series[0], [...this.allTvSeries.get(series[0])] ]
-                )]
+                ["series", this.allTvSeriesNames
+                    .reduce( (acc, currentSeries) => {
+                        acc.push([currentSeries, [...this.allTvSeries.get(currentSeries)] ]);
+                        return acc;
+                    }, [])
+                ]
             ];
-
         return toBeSerialized.reduce( (result, [key, value] ) => {
             result[key as string] = value;
             return result;

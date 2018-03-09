@@ -4,9 +4,7 @@ jest.mock('fs');
 jest.mock('filehound');
 
 // imports
-const basename = require('path').basename;
 import {folders, files, MediaScan} from '../__helpers__/_constants';
-import {parse as nameParser} from 'parse-torrent-title';
 
 describe('allTvSeriesNames', () => {
 
