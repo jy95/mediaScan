@@ -1,9 +1,9 @@
 language: node_js
 dist: trusty
 sudo: required
+# keep the npm cache around to speed up installs
 cache:
   directories:
-    - node_modules
     - "$HOME/.npm"
 notifications:
   slack:
