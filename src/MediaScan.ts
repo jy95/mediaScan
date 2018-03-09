@@ -272,6 +272,10 @@ class MediaScan extends EventEmitter {
         return cloneDeep(this.categoryForFile);
     }
 
+    get allTvSeriesNames() : string[] {
+        return [...this.allTvSeries.keys()];
+    }
+
     // full data of lib as JSON string
     toJSON(): string {
         return JSON.stringify(this.toJSONObject());
