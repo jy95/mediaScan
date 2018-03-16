@@ -1,3 +1,25 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/jy95/mediaScan/compare/v1.1.6...v1.2.0) (2018-03-16)
+
+
+### CI
+
+* cache only npm and not node modules ([3dbf969d3922c1e70e28278cb8f1b52c1b2b6595](https://github.com/jy95/mediaScan/commit/3dbf969d3922c1e70e28278cb8f1b52c1b2b6595))
+* Speed Up Build install step ([a909330eab2b977317c90e86ccf92c08cde8133c](https://github.com/jy95/mediaScan/commit/a909330eab2b977317c90e86ccf92c08cde8133c))
+
+### Feat
+
+* getter allTvSeriesNames ([907e10eee43106faf0a3a3dd96a61aae04e92708](https://github.com/jy95/mediaScan/commit/907e10eee43106faf0a3a3dd96a61aae04e92708))
+
+### Perf
+
+* quick return for filter functions ([5723838147a00398d44b11f7d3904ffedfb05926](https://github.com/jy95/mediaScan/commit/5723838147a00398d44b11f7d3904ffedfb05926))
+* simplify toJSONObject series key ([aa1746e36c91bbfb0b5e3d9367f6e0b7ea089f3f](https://github.com/jy95/mediaScan/commit/aa1746e36c91bbfb0b5e3d9367f6e0b7ea089f3f))
+
+### Refactor
+
+* Use Lodash FP instead of transducers ([2ab89f038962e2c0ce8ec56acd2fff806e838671](https://github.com/jy95/mediaScan/commit/2ab89f038962e2c0ce8ec56acd2fff806e838671))
+
 <a name="1.1.6"></a>
 ## [1.1.6](https://github.com/jy95/mediaScan/compare/v1.1.5...v1.1.6) (2018-03-08)
 

@@ -1,6 +1,6 @@
 {
   "name": "mediascan",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "A scanner for media files that follows a user-provided naming convention",
   "main": "index.js",
   "types": "index.d.ts",
