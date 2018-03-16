@@ -8,8 +8,7 @@ const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
 
-// transducers operators
-const t = require("transducers.js");
+import { compose, pluck, filter as filterFP } from 'lodash/fp'
 
 // local import
 import {
@@ -179,18 +178,18 @@ class MediaScan extends EventEmitter {
         return new PromiseLib((resolve, reject) => {
             try {
                 // transformations for transducers
-                let mapCategoryFiles = t.compose(
-                    t.map(
+                let mapCategoryFiles = compose(
+                    filterFP( resultObject => resultObject.category !== undefined ),
+                    pluck(
                         file => {
                             return {filePath: file, category: this.categoryForFile.get(file)};
                         }
-                    ),
-                    t.filter( resultObject => resultObject.category !== undefined )
+                    )
                 );
                 let filterContentType = (requestedType) => (file) => file.category === requestedType;
 
                 // processing
-                const mappedFiles = t.into([], mapCategoryFiles, files);
+                const mappedFiles = mapCategoryFiles(files);
 
                 // movies files
                 const moviesFiles = filter(mappedFiles, filterContentType(MediaScan.MOVIES_TYPE));
