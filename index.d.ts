@@ -42,6 +42,7 @@ declare class MediaScan extends NodeJS.EventEmitter {
     allMovies(): Set<MediaScanTypes.TPN_Extended>;
     allTvSeries(): Map<string, Set<MediaScanTypes.TPN_Extended>>;
     allFilesWithCategory(): Map<string, MediaScanTypes.Category>;
+    allTvSeriesNames() : string[];
 
     // constructor
     constructor(dataParameters?: MediaScanTypes.DataParameters, customConfig?: MediaScanTypes.CustomFunctionsConfig);

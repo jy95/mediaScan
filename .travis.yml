@@ -1,9 +1,10 @@
 language: node_js
 dist: trusty
 sudo: required
+# keep the npm cache around to speed up installs
 cache:
   directories:
-    - node_modules
+    - "$HOME/.npm"
 notifications:
   slack:
       on_success: change
@@ -15,9 +16,11 @@ node_js:
 os:
   - linux
 before_install:
-  - npm i -g npm@latest
   - npm install -g codecov
   - npm i -g travis-deploy-once
+install:
+  - npm i -g npm@latest
+  - npm ci
 before_script:
   - npm prune
   - echo "Check if TypeScript files have valid syntax/types"

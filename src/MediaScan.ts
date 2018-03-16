@@ -8,8 +8,7 @@ const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
 
-// transducers operators
-const t = require("transducers.js");
+import { compose, pluck, filter as filterFP } from 'lodash/fp'
 
 // local import
 import {
@@ -179,18 +178,18 @@ class MediaScan extends EventEmitter {
         return new PromiseLib((resolve, reject) => {
             try {
                 // transformations for transducers
-                let mapCategoryFiles = t.compose(
-                    t.map(
+                let mapCategoryFiles = compose(
+                    filterFP( resultObject => resultObject.category !== undefined ),
+                    pluck(
                         file => {
                             return {filePath: file, category: this.categoryForFile.get(file)};
                         }
-                    ),
-                    t.filter( resultObject => resultObject.category !== undefined )
+                    )
                 );
                 let filterContentType = (requestedType) => (file) => file.category === requestedType;
 
                 // processing
-                const mappedFiles = t.into([], mapCategoryFiles, files);
+                const mappedFiles = mapCategoryFiles(files);
 
                 // movies files
                 const moviesFiles = filter(mappedFiles, filterContentType(MediaScan.MOVIES_TYPE));
@@ -272,6 +271,10 @@ class MediaScan extends EventEmitter {
         return cloneDeep(this.categoryForFile);
     }
 
+    get allTvSeriesNames() : string[] {
+        return [...this.allTvSeries.keys()];
+    }
+
     // full data of lib as JSON string
     toJSON(): string {
         return JSON.stringify(this.toJSONObject());
@@ -286,12 +289,13 @@ class MediaScan extends EventEmitter {
                 ["paths", [...this.paths] ],
                 ["allFilesWithCategory", [...this.allFilesWithCategory] ],
                 ["movies", [...this.allMovies]],
-                ["series", [...this.allTvSeries].map(
-                    // serie[0] contains the title and [1] the wrong JSON (only a tuple of the set) ; let fix it
-                    series => [series[0], [...this.allTvSeries.get(series[0])] ]
-                )]
+                ["series", this.allTvSeriesNames
+                    .reduce( (acc, currentSeries) => {
+                        acc.push([currentSeries, [...this.allTvSeries.get(currentSeries)] ]);
+                        return acc;
+                    }, [])
+                ]
             ];
-
         return toBeSerialized.reduce( (result, [key, value] ) => {
             result[key as string] = value;
             return result;

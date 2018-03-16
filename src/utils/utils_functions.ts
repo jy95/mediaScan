@@ -1,8 +1,7 @@
 // Check properties
 import {access, constants as FsConstants} from "fs";
 import PromiseLib from 'bluebird';
-// transducers operators
-const t = require("transducers.js");
+import { compose, pluck, filter as filterFP } from 'lodash/fp'
 import * as MediaScanTypes from "../MediaScanTypes";
 
 export function checkProperties(obj, properties): boolean {
@@ -35,6 +34,8 @@ export function filterDefaultProperties<T>(propertiesNames : string[],
     // transformations
     let meetRequirement = (currentProperty) => meetSpecFunction(search[currentProperty]);
     let transformResult = (currentProperty) => transformFunction(currentProperty, search[currentProperty]);
-    let transformations = t.compose(t.filter(meetRequirement), t.map(transformResult));
-    return t.into([], transformations, propertiesNames);
+    return compose(
+        pluck(transformResult),
+        filterFP(meetRequirement)
+    )(propertiesNames);
 }
