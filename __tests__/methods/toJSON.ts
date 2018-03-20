@@ -18,7 +18,7 @@ describe('toJSON', () => {
 
     /** @test {MediaScan#toJSON} */
     test('return a valid stringified JSON', async () => {
-        const expectedJsonString = JSON.stringify({
+        const expectedJson = {
             paths: folders,
             allFilesWithCategory: [
                 [
@@ -52,13 +52,13 @@ describe('toJSON', () => {
                     ],
                 ],
             ],
-        });
+        };
         let libInstance = new MediaScan();
         const data = await libInstance.addNewPath(...folders);
         await expect(data).resolves;
         const scan = await libInstance.scan();
         await expect(scan).resolves;
         const dataFromInstance = libInstance.toJSON();
-        expect(JSON.stringify(JSON.parse(dataFromInstance))).toEqual(expectedJsonString);
+        expect(JSON.parse(dataFromInstance)).toEqual(expectedJson);
     });
 });

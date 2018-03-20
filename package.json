@@ -3,10 +3,8 @@
   "version": "1.2.0",
   "description": "A scanner for media files that follows a user-provided naming convention",
   "main": "index.js",
-  "types": "index.d.ts",
   "files": [
-    "lib/",
-    "index.d.ts"
+    "lib/"
   ],
   "scripts": {
     "test": "jest",
@@ -59,6 +57,7 @@
     "@semantic-release/git": "^3.1.1",
     "@types/jest": "^22.1.4",
     "@types/node": "^9.4.6",
+    "babel-minify": "^0.4.0-alpha.caaefb4c",
     "conventional-changelog-eslint": "^1.0.5",
     "jest": "^22.4.2",
     "semantic-release": "^14.0.4",
