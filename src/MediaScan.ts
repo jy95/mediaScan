@@ -8,7 +8,7 @@ const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
 
-import { compose, pluck, filter as filterFP } from 'lodash/fp'
+import {compose, pluck, filter as filterFP} from 'lodash/fp'
 
 // local import
 import {
@@ -177,26 +177,30 @@ class MediaScan extends EventEmitter {
     removeOldFiles(...files: string[]): Promise<any> {
         return new PromiseLib((resolve, reject) => {
             try {
-                // transformations for transducers
-                let mapCategoryFiles = compose(
-                    filterFP( resultObject => resultObject.category !== undefined ),
+                // processing
+                let mappedFiles = compose(
+                    filterFP(resultObject => resultObject.category !== undefined),
                     pluck(
                         file => {
                             return {filePath: file, category: this.categoryForFile.get(file)};
                         }
-                    )
-                );
+                    ),
+                    // to handle platform support paths
+                    pluck(file => normalize(file))
+                )(files);
                 let filterContentType = (requestedType) => (file) => file.category === requestedType;
 
-                // processing
-                const mappedFiles = mapCategoryFiles(files);
+                // remove the mapping of each deleted file(s)
+                for (const file of mappedFiles) {
+                    this.categoryForFile.delete(file.filePath);
+                }
 
                 // movies files
                 const moviesFiles = filter(mappedFiles, filterContentType(MediaScan.MOVIES_TYPE));
                 const moviesFilePaths = map(moviesFiles, 'filePath');
 
                 // for movies, just an easy removal
-                if (moviesFiles.length > 0){
+                if (moviesFiles.length > 0) {
                     // update the filtered Set
                     this.stores.set(
                         MediaScan.MOVIES_TYPE,
@@ -210,7 +214,7 @@ class MediaScan extends EventEmitter {
                 const seriesFiles = filter(mappedFiles, filterContentType(MediaScan.TV_SERIES_TYPE));
 
                 // for series , a bit more complex
-                if (seriesFiles.length > 0){
+                if (seriesFiles.length > 0) {
 
                     // Get the series and their files that will be deleted
                     const seriesShows = reduce(seriesFiles, (result, file) => {
@@ -240,10 +244,6 @@ class MediaScan extends EventEmitter {
                         this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
                 }
 
-                // remove the mapping of each deleted file(s)
-                for (const file of files) {
-                    this.categoryForFile.delete(file);
-                }
                 this.emit('removeOldFiles', {files});
                 resolve({
                     message: 'The files have been deleted from the library',
@@ -271,7 +271,7 @@ class MediaScan extends EventEmitter {
         return cloneDeep(this.categoryForFile);
     }
 
-    get allTvSeriesNames() : string[] {
+    get allTvSeriesNames(): string[] {
         return [...this.allTvSeries.keys()];
     }
 
@@ -281,22 +281,22 @@ class MediaScan extends EventEmitter {
     }
 
     // data as a JSON object
-    toJSONObject(looseMode? : boolean) : MediaScanTypes.LibAsJson {
+    toJSONObject(looseMode?: boolean): MediaScanTypes.LibAsJson {
         // if in loose Mode , the objects will only contains the mapping between filepath and Category
         const toBeSerialized = (looseMode)
-            ? [ ["allFilesWithCategory", [...this.allFilesWithCategory] ] ]
+            ? [["allFilesWithCategory", [...this.allFilesWithCategory]]]
             : [
-                ["paths", [...this.paths] ],
-                ["allFilesWithCategory", [...this.allFilesWithCategory] ],
+                ["paths", [...this.paths]],
+                ["allFilesWithCategory", [...this.allFilesWithCategory]],
                 ["movies", [...this.allMovies]],
                 ["series", this.allTvSeriesNames
-                    .reduce( (acc, currentSeries) => {
-                        acc.push([currentSeries, [...this.allTvSeries.get(currentSeries)] ]);
+                    .reduce((acc, currentSeries) => {
+                        acc.push([currentSeries, [...this.allTvSeries.get(currentSeries)]]);
                         return acc;
                     }, [])
                 ]
             ];
-        return toBeSerialized.reduce( (result, [key, value] ) => {
+        return toBeSerialized.reduce((result, [key, value]) => {
             result[key as string] = value;
             return result;
         }, {});
