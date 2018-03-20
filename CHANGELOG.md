@@ -1,3 +1,21 @@
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/jy95/mediaScan/compare/v1.2.0...v1.2.1) (2018-03-20)
+
+
+### Perf
+
+* Use babel-minify@canary ([0a05799722e159499cd15e73f69155b7d234c8ea](https://github.com/jy95/mediaScan/commit/0a05799722e159499cd15e73f69155b7d234c8ea))
+
+### Refactor
+
+* Array.prototype.push.apply instead of lodash concat ([cc462c5f9504559d8cadc7a6e16bcc6c5ffe8a76](https://github.com/jy95/mediaScan/commit/cc462c5f9504559d8cadc7a6e16bcc6c5ffe8a76))
+* less code version of removeOldFiles ([d6f0fe35d34083f548bef78560bcc3115b61fd36](https://github.com/jy95/mediaScan/commit/d6f0fe35d34083f548bef78560bcc3115b61fd36))
+
+### Upgrade
+
+* Update ALL 20/03/2018 ([9e9df23e26ba5463bf38e249e297e07517e01cf6](https://github.com/jy95/mediaScan/commit/9e9df23e26ba5463bf38e249e297e07517e01cf6))
+* Update package-lock ([c604e484f5170efc16bc190977ba39cb8cb18e6e](https://github.com/jy95/mediaScan/commit/c604e484f5170efc16bc190977ba39cb8cb18e6e))
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/jy95/mediaScan/compare/v1.1.6...v1.2.0) (2018-03-16)
 
