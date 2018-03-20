@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape,max-len */
-import { compose, pluck, filter as filterFP } from 'lodash/fp'
-import {isEmpty, concat} from 'lodash';
+import {compose, pluck, filter as filterFP} from 'lodash/fp'
+import {isEmpty} from 'lodash';
 /**
  * Boolean properties filter
  */
@@ -37,44 +37,42 @@ function mapProperties(searchParameters: MediaScanTypes.SearchParameters): {
     // add the optional new properties , optionally provided by user
     let additionalProperties = (searchParameters.additionalProperties === undefined) ? [] : searchParameters.additionalProperties;
     let filterAdditionalProperties = (type) => (newProperty) => newProperty.type === type;
-    const booleanFieldsSearchMap = new Map(
-        <[string, boolean][]>
-            concat(
-                filterDefaultBooleanProperties(searchParameters),
-                compose(
-                    pluck(({name, value}) => [name, value]),
-                    filterFP(({value}) => meetBooleanSpec(value)),
-                    filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.BOOLEAN))
-                )(additionalProperties)
-            )
+    let booleanFieldsSearchArray = filterDefaultBooleanProperties(searchParameters);
+    let numberFieldsSearchArray = filterDefaultNumberProperties(searchParameters);
+    let stringFieldsSearchArray = filterDefaultStringProperties(searchParameters);
+
+    // add additional Properties into the proper array
+    Array.prototype.push.apply(
+        booleanFieldsSearchArray,
+        compose(
+            pluck(({name, value}) => [name, value]),
+            filterFP(({value}) => meetBooleanSpec(value)),
+            filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.BOOLEAN))
+        )(additionalProperties)
     );
-    const numberFieldsSearchMap = new Map(
-        <[string, MediaScanTypes.NumberExpressionObject][]>
-            concat(
-                filterDefaultNumberProperties(searchParameters),
-                compose(
-                    pluck(({name, value}) => [name, convertToValidExpression(value as number | string)]),
-                    filterFP(({value}) => meetNumberSpec(value)),
-                    filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.NUMBER))
-                )(additionalProperties)
-            )
+
+    Array.prototype.push.apply(
+        numberFieldsSearchArray,
+        compose(
+            pluck(({name, value}) => [name, convertToValidExpression(value as number | string)]),
+            filterFP(({value}) => meetNumberSpec(value)),
+            filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.NUMBER))
+        )(additionalProperties)
     );
-    const stringFieldsSearchMap = new Map(
-        <[string, string | string[]][]>
-            concat(
-                filterDefaultStringProperties(searchParameters),
-                compose(
-                    pluck(({name, value}) => [name, value]),
-                    filterFP(({value}) => meetStringSpec(value)),
-                    filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.STRING))
-                )(additionalProperties)
-            )
+
+    Array.prototype.push.apply(
+        stringFieldsSearchArray,
+        compose(
+            pluck(({name, value}) => [name, value]),
+            filterFP(({value}) => meetStringSpec(value)),
+            filterFP(filterAdditionalProperties(MediaScanTypes.AdditionalPropertiesType.STRING))
+        )(additionalProperties)
     );
 
     return {
-        booleanFieldsSearchMap,
-        numberFieldsSearchMap,
-        stringFieldsSearchMap,
+        booleanFieldsSearchMap: new Map<string, boolean>(booleanFieldsSearchArray),
+        numberFieldsSearchMap: new Map<string, MediaScanTypes.NumberExpressionObject>(numberFieldsSearchArray),
+        stringFieldsSearchMap: new Map<string, string|string[]>(stringFieldsSearchArray),
     };
 }
 

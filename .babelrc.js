@@ -1,5 +1,10 @@
 // var env = process.env.BABEL_ENV || process.env.NODE_ENV; // Maybe later : for minify stuff
 var presets = [
+    ["minify", {
+        "mangle": {
+            "keepClassName": true
+        }
+    }],
     ["@babel/env", { loose: true, "targets": { "node": 6 } } ],
     "@babel/preset-typescript"
 ];

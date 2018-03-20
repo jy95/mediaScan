@@ -58,6 +58,10 @@
       "emoji": ":boom:",
       "type": "Breaking:",
       "description": "Breaking Change"
+    },{
+       "emoji": ":gem:",
+       "type": "Upgrade:",
+       "description": "Update dependencies"
     }
   ],
   "rules": {
