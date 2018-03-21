@@ -1,3 +1,16 @@
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/jy95/mediaScan/compare/v1.2.1...v1.2.2) (2018-03-21)
+
+
+### Perf
+
+* Lodash FP version of removeOldFiles ([5029fd7faafb339fe64694a14a8bb2c0dccaaf03](https://github.com/jy95/mediaScan/commit/5029fd7faafb339fe64694a14a8bb2c0dccaaf03))
+* Use Array.prototype.push.apply instead of concat ([047118524790e172df3bb6990403d9e0e24a3a0d](https://github.com/jy95/mediaScan/commit/047118524790e172df3bb6990403d9e0e24a3a0d))
+
+### Upgrade
+
+* Update semantic-release to version 15.1.3 ([da08546df874effc0e71d3d37433bd1fa7541991](https://github.com/jy95/mediaScan/commit/da08546df874effc0e71d3d37433bd1fa7541991)), closes [#21](https://github.com/jy95/mediaScan/issues/21)
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/jy95/mediaScan/compare/v1.2.0...v1.2.1) (2018-03-20)
 
