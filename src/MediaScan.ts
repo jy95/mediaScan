@@ -1,7 +1,7 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, cloneDeep, reduce, concat, has, forIn, map, filter, some, includes} from 'lodash';
+import {uniq, difference, cloneDeep, reduce, has, forIn, map, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
@@ -76,7 +76,11 @@ class MediaScan extends EventEmitter {
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
                     // store the result for next usage
-                    result[fileCategory] = concat((has(result, fileCategory)) ? result[fileCategory] : [], jsonFile);
+                    if (has(result, fileCategory)){
+                        Array.prototype.push.apply(result[fileCategory], [jsonFile]);
+                    } else {
+                        result[fileCategory] = [jsonFile];
+                    }
                     return result;
                 }, {});
 
@@ -90,7 +94,11 @@ class MediaScan extends EventEmitter {
                 if (scanningResult[MediaScan.TV_SERIES_TYPE] !== undefined) {
                     // mapping for faster result(s)
                     let newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
-                        result[tvSeries.title] = concat((has(result, tvSeries.title)) ? result[tvSeries.title] : [], tvSeries);
+                        if (has(result, tvSeries.title)) {
+                            Array.prototype.push.apply(result[tvSeries.title], [tvSeries])
+                        } else {
+                            result[tvSeries.title] = [tvSeries]
+                        }
                         return result;
                     }, {});
                     // fastest way to update things
@@ -219,7 +227,11 @@ class MediaScan extends EventEmitter {
                     // Get the series and their files that will be deleted
                     const seriesShows = reduce(seriesFiles, (result, file) => {
                         const seriesName = this.parser(basename(file.filePath)).title;
-                        result[seriesName] = concat((has(result, seriesName)) ? result[seriesName] : [], file.filePath);
+                        if (has(result,seriesName)){
+                            Array.prototype.push.apply(result[seriesName], [file.filePath])
+                        } else {
+                            result[seriesName] = [file.filePath]
+                        }
                         return result;
                     }, {});
 
