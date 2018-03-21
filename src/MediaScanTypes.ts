@@ -27,8 +27,9 @@ export interface TPN_Extended extends TPN {
 }
 
 // A parsing function to be used with this lib
+// fullPathFile is the full path to the file - useful if you want to extrapolate things
 export interface ParseFunction {
-    (title: string): TPN | TPN_Extended;
+    (fullPathFile: string): TPN | TPN_Extended;
 }
 
 // the media files categories

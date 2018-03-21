@@ -2,6 +2,8 @@
 import {access, constants as FsConstants} from "fs";
 import PromiseLib from 'bluebird';
 import { compose, pluck, filter as filterFP } from 'lodash/fp'
+import {basename} from 'path';
+import {parse as nameParser} from 'parse-torrent-title';
 import * as MediaScanTypes from "../MediaScanTypes";
 
 export function checkProperties(obj, properties): boolean {
@@ -31,11 +33,13 @@ export function defaultWhichCategoryFunction(object : MediaScanTypes.TPN) : Medi
 export function filterDefaultProperties<T>(propertiesNames : string[],
                                            search : MediaScanTypes.SearchParameters, meetSpecFunction : (value) => boolean,
                                            transformFunction : (key : string, value) => MediaScanTypes.filterTuple<T> ) : MediaScanTypes.filterTuple<T>[]  {
-    // transformations
-    let meetRequirement = (currentProperty) => meetSpecFunction(search[currentProperty]);
-    let transformResult = (currentProperty) => transformFunction(currentProperty, search[currentProperty]);
     return compose(
-        pluck(transformResult),
-        filterFP(meetRequirement)
+        pluck( currentProperty => transformFunction(currentProperty, search[currentProperty])),
+        filterFP(currentProperty => meetSpecFunction(search[currentProperty]))
     )(propertiesNames);
+}
+
+// default parser
+export function defaultParser(fullPathFile: string) {
+    return nameParser(basename(fullPathFile));
 }

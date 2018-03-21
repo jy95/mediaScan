@@ -1,11 +1,10 @@
 // Imports
 import FileHound from 'filehound';
-import {basename, normalize} from 'path';
+import {normalize} from 'path';
 import {uniq, difference, cloneDeep, reduce, has, forIn, map, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
-const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
 
 import {compose, pluck, filter as filterFP, reduce as reduceFP} from 'lodash/fp'
@@ -15,7 +14,7 @@ import {
     filterMoviesByProperties, filterTvSeriesByProperties
 }
     from './filters/filterProperties';
-import {defaultWhichCategoryFunction, promisifiedAccess} from './utils/utils_functions';
+import {defaultWhichCategoryFunction, promisifiedAccess, defaultParser} from './utils/utils_functions';
 import * as MediaScanTypes from "./MediaScanTypes";
 
 /**
@@ -42,7 +41,7 @@ class MediaScan extends EventEmitter {
                     series = new Map(),
                 }: MediaScanTypes.DataParameters = {},
                 {
-                    parser = nameParser,
+                    parser = defaultParser,
                     whichCategory = defaultWhichCategoryFunction,
                 }: MediaScanTypes.CustomFunctionsConfig = {}) {
         super();
@@ -65,9 +64,7 @@ class MediaScan extends EventEmitter {
 
                 // process each file
                 let scanningResult = reduce(newFiles, (result, file) => {
-                    // get data from nameParser lib
-                    // what we need is only the basename, not the full path
-                    const jsonFile = this.parser(basename(file));
+                    const jsonFile = this.parser(file);
                     // extend this object in order to be used by this library
                     Object.assign(jsonFile, {filePath: file});
                     // find out which type of this file
@@ -236,7 +233,7 @@ class MediaScan extends EventEmitter {
                             }, {}),
                         pluck(
                             series => {
-                                return {...series, seriesName: this.parser(basename(series.filePath)).title };
+                                return {...series, seriesName: this.parser(series.filePath).title };
                             }
                         )
                     )(seriesFiles);
