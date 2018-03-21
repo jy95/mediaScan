@@ -1,14 +1,14 @@
 // Imports
 import FileHound from 'filehound';
 import {basename, normalize} from 'path';
-import {uniq, difference, cloneDeep, reduce, concat, has, forIn, map, filter, some, includes} from 'lodash';
+import {uniq, difference, cloneDeep, reduce, has, forIn, map, filter, some, includes} from 'lodash';
 import PromiseLib from 'bluebird';
 
 const videosExtension = require('video-extensions');
 const nameParser = require('parse-torrent-title').parse;
 import {EventEmitter} from 'events';
 
-import {compose, pluck, filter as filterFP} from 'lodash/fp'
+import {compose, pluck, filter as filterFP, reduce as reduceFP} from 'lodash/fp'
 
 // local import
 import {
@@ -76,7 +76,11 @@ class MediaScan extends EventEmitter {
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
                     // store the result for next usage
-                    result[fileCategory] = concat((has(result, fileCategory)) ? result[fileCategory] : [], jsonFile);
+                    if (has(result, fileCategory)){
+                        Array.prototype.push.apply(result[fileCategory], [jsonFile]);
+                    } else {
+                        result[fileCategory] = [jsonFile];
+                    }
                     return result;
                 }, {});
 
@@ -90,7 +94,11 @@ class MediaScan extends EventEmitter {
                 if (scanningResult[MediaScan.TV_SERIES_TYPE] !== undefined) {
                     // mapping for faster result(s)
                     let newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
-                        result[tvSeries.title] = concat((has(result, tvSeries.title)) ? result[tvSeries.title] : [], tvSeries);
+                        if (has(result, tvSeries.title)) {
+                            Array.prototype.push.apply(result[tvSeries.title], [tvSeries])
+                        } else {
+                            result[tvSeries.title] = [tvSeries]
+                        }
                         return result;
                     }, {});
                     // fastest way to update things
@@ -217,11 +225,21 @@ class MediaScan extends EventEmitter {
                 if (seriesFiles.length > 0) {
 
                     // Get the series and their files that will be deleted
-                    const seriesShows = reduce(seriesFiles, (result, file) => {
-                        const seriesName = this.parser(basename(file.filePath)).title;
-                        result[seriesName] = concat((has(result, seriesName)) ? result[seriesName] : [], file.filePath);
-                        return result;
-                    }, {});
+                    const seriesShows = compose(
+                        reduceFP(
+                            (acc, parsedFile) => {
+                                if (!has(acc, parsedFile.seriesName)){
+                                    acc[parsedFile.seriesName] = [];
+                                }
+                                Array.prototype.push.apply(acc[parsedFile.seriesName], [parsedFile.filePath]);
+                                return acc;
+                            }, {}),
+                        pluck(
+                            series => {
+                                return {...series, seriesName: this.parser(basename(series.filePath)).title };
+                            }
+                        )
+                    )(seriesFiles);
 
                     let newTvSeries = this.allTvSeries;
                     // check if needed to store new Value
