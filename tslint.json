@@ -1,9 +1,28 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "class-name": false,
+    "no-var-requires": false,
+    "no-eval": false,
+    "no-bitwise": false,
+    "interface-name": [
+      "never-prefix"
     ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "public-static-field",
+          "public-constructor",
+          "private-instance-method",
+          "public-instance-method"
+        ]
+      }
+    ]
+  },
+  "rulesDirectory": []
 }

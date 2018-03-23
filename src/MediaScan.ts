@@ -1,22 +1,20 @@
 // Imports
-import FileHound from 'filehound';
-import {basename, normalize} from 'path';
-import {uniq, difference, cloneDeep, reduce, has, forIn, map, filter, some, includes} from 'lodash';
-import PromiseLib from 'bluebird';
+import PromiseLib from "bluebird";
+import FileHound from "filehound";
+import {cloneDeep, difference, filter, forIn, has, includes, map, reduce, some, uniq} from "lodash";
+import {normalize} from "path";
 
-const videosExtension = require('video-extensions');
-const nameParser = require('parse-torrent-title').parse;
-import {EventEmitter} from 'events';
+const videosExtension = require("video-extensions");
+import {EventEmitter} from "events";
 
-import {compose, pluck, filter as filterFP, reduce as reduceFP} from 'lodash/fp'
+import {compose, filter as filterFP, pluck, reduce as reduceFP} from "lodash/fp";
 
 // local import
 import {
-    filterMoviesByProperties, filterTvSeriesByProperties
-}
-    from './filters/filterProperties';
-import {defaultWhichCategoryFunction, promisifiedAccess} from './utils/utils_functions';
+    filterMoviesByProperties, filterTvSeriesByProperties,
+} from "./filters/filterProperties";
 import * as MediaScanTypes from "./MediaScanTypes";
+import {defaultParser, defaultWhichCategoryFunction, promisifiedAccess} from "./utils/utils_functions";
 
 /**
  * Class representing the MediaScan Library
@@ -24,15 +22,22 @@ import * as MediaScanTypes from "./MediaScanTypes";
  */
 class MediaScan extends EventEmitter {
 
-    protected defaultPath: string; // Default path , if paths is empty
-    protected parser: MediaScanTypes.ParseFunction; // the parser to extract the useful data from name
-    protected whichCategory: MediaScanTypes.WhichCategoryFunction; // Function that tell us what is the category of the TPN
-    protected paths: string[]; // all the paths that will be explored
-    protected categoryForFile: Map<string, MediaScanTypes.Category>; // the mapping between file and Category
-    protected stores: MediaScanTypes.MapSet<MediaScanTypes.TPN | MediaScanTypes.TPN_Extended>; // where I keep the result of Category
     // constants getter for external purposes (example create a custom whichCategory function)
-    static readonly MOVIES_TYPE = MediaScanTypes.Category.MOVIES_TYPE;
-    static readonly TV_SERIES_TYPE = MediaScanTypes.Category.TV_SERIES_TYPE;
+    public static readonly MOVIES_TYPE = MediaScanTypes.Category.MOVIES_TYPE;
+    public static readonly TV_SERIES_TYPE = MediaScanTypes.Category.TV_SERIES_TYPE;
+    // properties
+    // Default path , if paths is empty
+    protected defaultPath: string;
+    // the parser to extract the useful data from name
+    protected parser: MediaScanTypes.ParseFunction;
+    // Function that tell us what is the category of the TPN
+    protected whichCategory: MediaScanTypes.WhichCategoryFunction;
+    // all the paths that will be explored
+    protected paths: string[];
+    // the mapping between file and Category
+    protected categoryForFile: Map<string, MediaScanTypes.Category>;
+    // where I keep the result of Category
+    protected stores: MediaScanTypes.MapSet<MediaScanTypes.TPN | MediaScanTypes.TPN_Extended>;
 
     constructor({
                     defaultPath = process.cwd(),
@@ -42,7 +47,7 @@ class MediaScan extends EventEmitter {
                     series = new Map(),
                 }: MediaScanTypes.DataParameters = {},
                 {
-                    parser = nameParser,
+                    parser = defaultParser,
                     whichCategory = defaultWhichCategoryFunction,
                 }: MediaScanTypes.CustomFunctionsConfig = {}) {
         super();
@@ -64,10 +69,8 @@ class MediaScan extends EventEmitter {
                 const newFiles = difference(files, alreadyFoundFiles);
 
                 // process each file
-                let scanningResult = reduce(newFiles, (result, file) => {
-                    // get data from nameParser lib
-                    // what we need is only the basename, not the full path
-                    const jsonFile = this.parser(basename(file));
+                const scanningResult = reduce(newFiles, (result, file) => {
+                    const jsonFile = this.parser(file);
                     // extend this object in order to be used by this library
                     Object.assign(jsonFile, {filePath: file});
                     // find out which type of this file
@@ -76,7 +79,7 @@ class MediaScan extends EventEmitter {
                     // add it in found files
                     this.categoryForFile.set(file, fileCategory);
                     // store the result for next usage
-                    if (has(result, fileCategory)){
+                    if (has(result, fileCategory)) {
                         Array.prototype.push.apply(result[fileCategory], [jsonFile]);
                     } else {
                         result[fileCategory] = [jsonFile];
@@ -93,22 +96,22 @@ class MediaScan extends EventEmitter {
                 // add the found tv-series
                 if (scanningResult[MediaScan.TV_SERIES_TYPE] !== undefined) {
                     // mapping for faster result(s)
-                    let newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
+                    const newSeries = reduce(scanningResult[MediaScan.TV_SERIES_TYPE], (result, tvSeries) => {
                         if (has(result, tvSeries.title)) {
-                            Array.prototype.push.apply(result[tvSeries.title], [tvSeries])
+                            Array.prototype.push.apply(result[tvSeries.title], [tvSeries]);
                         } else {
-                            result[tvSeries.title] = [tvSeries]
+                            result[tvSeries.title] = [tvSeries];
                         }
                         return result;
                     }, {});
                     // fastest way to update things
-                    let newTvSeries = this.allTvSeries;
+                    const newTvSeries = this.allTvSeries;
                     forIn(newSeries, (seriesArray, seriesName) => {
-                        let resultSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
+                        const resultSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
                         newTvSeries.set(
                             seriesName,
                             new Set([...resultSet, ...seriesArray]),
-                        )
+                        );
                     });
                     // update the stores var
                     this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
@@ -121,41 +124,41 @@ class MediaScan extends EventEmitter {
         }).bind(this);
     }
 
-    static listVideosExtension(): string[] {
+    public static listVideosExtension(): string[] {
         return videosExtension;
     }
 
-    addNewPath(...paths: string[]): Promise<any> {
+    public addNewPath(...paths: string[]): Promise<any> {
         // the user should provide us at lest a path
         if (paths.length === 0) {
-            this.emit('missing_parameter', {
-                functionName: 'addNewPath',
+            this.emit("missing_parameter", {
+                functionName: "addNewPath",
             });
-            return Promise.reject(new Error('Missing parameter'));
+            return Promise.reject(new Error("Missing parameter"));
         }
 
         return new PromiseLib(((resolve, reject) => {
-            PromiseLib.map(paths, path => promisifiedAccess(path)).then(() => {
+            PromiseLib.map(paths, (path) => promisifiedAccess(path)).then(() => {
                 // keep only unique paths
                 // use normalize for cross platform's code
                 this.paths = uniq([...this.paths, ...paths.map(normalize)]);
-                this.emit('addNewPath', {paths: this.paths});
-                resolve('All paths were added!');
+                this.emit("addNewPath", {paths: this.paths});
+                resolve("All paths were added!");
             }).catch((e) => {
-                this.emit('error_in_function', {
-                    functionName: 'addNewPath',
+                this.emit("error_in_function", {
                     error: e.message,
+                    functionName: "addNewPath",
                 });
                 reject(e);
             });
         })).bind(this);
     }
 
-    hasPathsProvidedByUser(): boolean {
+    public hasPathsProvidedByUser(): boolean {
         return this.paths.length !== 0;
     }
 
-    scan(): Promise<any> {
+    public scan(): Promise<any> {
         return new PromiseLib((resolve, reject) => {
             FileHound
                 .create()
@@ -163,18 +166,18 @@ class MediaScan extends EventEmitter {
                 .ext(videosExtension)
                 .find()
                 .then(
-                    files => PromiseLib.join(this.addNewFiles(files), () => {
-                        return Promise.resolve(files)
-                    })
+                    (files) => PromiseLib.join(this.addNewFiles(files), () => {
+                        return Promise.resolve(files);
+                    }),
                 )
                 .then((files) => {
-                    this.emit('scan', {files: files});
-                    resolve('Scanning completed');
+                    this.emit("scan", {files});
+                    resolve("Scanning completed");
                 })
                 .catch((err) => {
-                    this.emit('error_in_function', {
-                        functionName: 'scan',
+                    this.emit("error_in_function", {
                         error: err.message,
+                        functionName: "scan",
                     });
                     reject(err);
                 });
@@ -182,21 +185,21 @@ class MediaScan extends EventEmitter {
         }).bind(this);
     }
 
-    removeOldFiles(...files: string[]): Promise<any> {
+    public removeOldFiles(...files: string[]): Promise<any> {
         return new PromiseLib((resolve, reject) => {
             try {
                 // processing
-                let mappedFiles = compose(
-                    filterFP(resultObject => resultObject.category !== undefined),
+                const mappedFiles = compose(
+                    filterFP((resultObject) => resultObject.category !== undefined),
                     pluck(
-                        file => {
+                        (file) => {
                             return {filePath: file, category: this.categoryForFile.get(file)};
-                        }
+                        },
                     ),
                     // to handle platform support paths
-                    pluck(file => normalize(file))
+                    pluck((file) => normalize(file)),
                 )(files);
-                let filterContentType = (requestedType) => (file) => file.category === requestedType;
+                const filterContentType = (requestedType) => (file) => file.category === requestedType;
 
                 // remove the mapping of each deleted file(s)
                 for (const file of mappedFiles) {
@@ -205,7 +208,7 @@ class MediaScan extends EventEmitter {
 
                 // movies files
                 const moviesFiles = filter(mappedFiles, filterContentType(MediaScan.MOVIES_TYPE));
-                const moviesFilePaths = map(moviesFiles, 'filePath');
+                const moviesFilePaths = map(moviesFiles, "filePath");
 
                 // for movies, just an easy removal
                 if (moviesFiles.length > 0) {
@@ -213,8 +216,8 @@ class MediaScan extends EventEmitter {
                     this.stores.set(
                         MediaScan.MOVIES_TYPE,
                         new Set(
-                            filter(...this.allMovies, (movie) => !some(moviesFilePaths, movie.filePath))
-                        )
+                            filter(...this.allMovies, (movie) => !some(moviesFilePaths, movie.filePath)),
+                        ),
                     );
                 }
 
@@ -228,49 +231,51 @@ class MediaScan extends EventEmitter {
                     const seriesShows = compose(
                         reduceFP(
                             (acc, parsedFile) => {
-                                if (!has(acc, parsedFile.seriesName)){
+                                if (!has(acc, parsedFile.seriesName)) {
                                     acc[parsedFile.seriesName] = [];
                                 }
                                 Array.prototype.push.apply(acc[parsedFile.seriesName], [parsedFile.filePath]);
                                 return acc;
                             }, {}),
                         pluck(
-                            series => {
-                                return {...series, seriesName: this.parser(basename(series.filePath)).title };
-                            }
-                        )
+                            (series) => {
+                                return {...series, seriesName: this.parser(series.filePath).title };
+                            },
+                        ),
                     )(seriesFiles);
 
-                    let newTvSeries = this.allTvSeries;
+                    const newTvSeries = this.allTvSeries;
                     // check if needed to store new Value
                     let shouldUpdate = false;
                     forIn(seriesShows, (seriesArray, seriesName) => {
-                        let previousSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
-                        let filteredSet: Set<MediaScanTypes.TPN_Extended> = new Set(
-                            filter([...previousSet], (episode) => !includes(seriesArray, episode.filePath))
+                        const previousSet = (newTvSeries.has(seriesName)) ? newTvSeries.get(seriesName) : new Set();
+                        const filteredSet: Set<MediaScanTypes.TPN_Extended> = new Set(
+                            filter([...previousSet], (episode) => !includes(seriesArray, episode.filePath)),
                         );
                         // should I update later ?
-                        if (previousSet.size !== filteredSet.size)
+                        if (previousSet.size !== filteredSet.size) {
                             shouldUpdate = true;
+                        }
                         // if the filtered set is empty => no more episodes for this series
                         if (filteredSet.size === 0) {
                             newTvSeries.delete(seriesName);
-                        } else newTvSeries.set(seriesName, filteredSet);
+                        } else { newTvSeries.set(seriesName, filteredSet); }
                     });
                     // save the updated map
-                    if (shouldUpdate)
+                    if (shouldUpdate) {
                         this.stores.set(MediaScan.TV_SERIES_TYPE, newTvSeries);
+                    }
                 }
 
-                this.emit('removeOldFiles', {files});
+                this.emit("removeOldFiles", {files});
                 resolve({
-                    message: 'The files have been deleted from the library',
                     files,
+                    message: "The files have been deleted from the library",
                 });
             } catch (err) {
-                this.emit('error_in_function', {
-                    functionName: 'removeOldFiles',
+                this.emit("error_in_function", {
                     error: err.message,
+                    functionName: "removeOldFiles",
                 });
                 reject(err);
             }
@@ -294,12 +299,12 @@ class MediaScan extends EventEmitter {
     }
 
     // full data of lib as JSON string
-    toJSON(): string {
+    public toJSON(): string {
         return JSON.stringify(this.toJSONObject());
     }
 
     // data as a JSON object
-    toJSONObject(looseMode?: boolean): MediaScanTypes.LibAsJson {
+    public toJSONObject(looseMode?: boolean): MediaScanTypes.LibAsJson {
         // if in loose Mode , the objects will only contains the mapping between filepath and Category
         const toBeSerialized = (looseMode)
             ? [["allFilesWithCategory", [...this.allFilesWithCategory]]]
@@ -311,8 +316,8 @@ class MediaScan extends EventEmitter {
                     .reduce((acc, currentSeries) => {
                         acc.push([currentSeries, [...this.allTvSeries.get(currentSeries)]]);
                         return acc;
-                    }, [])
-                ]
+                    }, []),
+                ],
             ];
         return toBeSerialized.reduce((result, [key, value]) => {
             result[key as string] = value;
@@ -320,8 +325,9 @@ class MediaScan extends EventEmitter {
         }, {});
     }
 
-    static createFromJSON(json: MediaScanTypes.LibAsJson, customConfig?: MediaScanTypes.CustomFunctionsConfig): MediaScan {
-        let config: MediaScanTypes.DataParameters = {};
+    public static createFromJSON(json: MediaScanTypes.LibAsJson,
+                                 customConfig?: MediaScanTypes.CustomFunctionsConfig): MediaScan {
+        const config: MediaScanTypes.DataParameters = {};
         // transform the param
         /* istanbul ignore else */
         if (json.allFilesWithCategory) {
@@ -333,9 +339,9 @@ class MediaScan extends EventEmitter {
         }
         /* istanbul ignore else */
         if (json.series) {
-            let createdMap = new Map();
-            for (let [series_title, set_series] of json.series) {
-                createdMap.set(series_title, new Set(set_series));
+            const createdMap = new Map();
+            for (const [seriesTitle, setSeries] of json.series) {
+                createdMap.set(seriesTitle, new Set(setSeries));
             }
             config.series = createdMap;
         }
@@ -346,12 +352,12 @@ class MediaScan extends EventEmitter {
         return new MediaScan(config, customConfig);
     }
 
-    filterMovies(searchParameters: MediaScanTypes.SearchParameters = {}) {
+    public filterMovies(searchParameters: MediaScanTypes.SearchParameters = {}) {
         // apply params based on types
         return filterMoviesByProperties(searchParameters, this.allMovies);
     }
 
-    filterTvSeries(searchParameters: MediaScanTypes.SearchParameters = {}) {
+    public filterTvSeries(searchParameters: MediaScanTypes.SearchParameters = {}) {
         return filterTvSeriesByProperties(searchParameters, this.allTvSeries);
     }
 }

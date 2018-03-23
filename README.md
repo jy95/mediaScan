@@ -23,7 +23,7 @@ Don't hesitate to suggest new features : it is always worthy :)
 ### Which naming convention can I use with this lib ?
 
 **ANYTHING**. All You have to do is to implement a parser function :
-A function that takes a single string argument (title) that returns an object that minimal contains a `title` string property.
+A function that takes a single string argument `fullPathFile` (the full path to the file) that returns an object that minimal contains a `title` string property.
 For example :
 
 ```js
@@ -60,7 +60,7 @@ function defaultWhichCategoryFunction(object : MediaScanLib.TPN) : MediaScanLib.
 
 ### Using custom parameters in the lib
 
-Check the [constructor](https://github.com/jy95/mediaScan/blob/master/src/MediaScan.ts#L38) for more detail - a illustration :
+Check the [constructor](https://github.com/jy95/mediaScan/blob/master/src/MediaScan.ts#L38) for more detail - an illustration :
 
 ```js
 const MediaScan = require("mediascan");

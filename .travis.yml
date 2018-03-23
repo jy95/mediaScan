@@ -25,6 +25,8 @@ before_script:
   - npm prune
   - echo "Check if TypeScript files have valid syntax/types"
   - npm run type-check
+  - echo "Check if TypeScript files have valid linting"
+  - npm run lint
 after_success:
   - codecov
   - travis-deploy-once && npx -p node@8 npm run semantic-release

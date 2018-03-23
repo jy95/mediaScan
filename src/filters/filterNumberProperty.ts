@@ -13,10 +13,10 @@ export function convertToValidExpression(param: string | number): MediaScanTypes
             // if it is a valid number expression like the regex
             /* istanbul ignore else */
             if (validExpression.test(param as string)) {
-                let result = (param as string).match(validExpression);
+                const result = (param as string).match(validExpression);
                 returnValue = {
-                    operator: result[1],
                     number: Number(result[2]),
+                    operator: result[1],
                 };
             }
             break;
@@ -24,8 +24,8 @@ export function convertToValidExpression(param: string | number): MediaScanTypes
         // if the param is a number
         case "number":
             returnValue = {
-                operator: '==',
                 number: param as number,
+                operator: "==",
             };
             break;
     }
@@ -36,15 +36,17 @@ export function convertToValidExpression(param: string | number): MediaScanTypes
 /**
  * Filter function for filterByNumber
  */
-function resolveExpression(property: string, expressionObject: MediaScanTypes.NumberExpressionObject, object: MediaScanTypes.TPN | MediaScanTypes.TPN_Extended): boolean {
-    let {operator, number} = expressionObject;
+function resolveExpression(property: string,
+                           expressionObject: MediaScanTypes.NumberExpressionObject,
+                           object: MediaScanTypes.TPN | MediaScanTypes.TPN_Extended): boolean {
     // No : eval is not all evil but you should know what you are doing
     // eslint-disable-next-line no-eval
-    return eval(`${object[property]}${operator}${number}`);
+    return eval(`${object[property]}${expressionObject.operator}${expressionObject.number}`);
 }
 
-export function filterDefaultNumberProperties(searchObject: MediaScanTypes.DefaultSearchParameters) : MediaScanTypes.filterTuple<MediaScanTypes.NumberExpressionObject>[] {
-    const propertiesNames = ['season', 'episode', 'year'];
+export function filterDefaultNumberProperties(searchObject: MediaScanTypes.DefaultSearchParameters)
+: Array<MediaScanTypes.filterTuple<MediaScanTypes.NumberExpressionObject>> {
+    const propertiesNames = ["season", "episode", "year"];
     return filterDefaultProperties<MediaScanTypes.NumberExpressionObject>(propertiesNames, searchObject, (value) => {
         return meetNumberSpec(value);
     }, (key, value) => [key, convertToValidExpression(value)]);
@@ -52,7 +54,9 @@ export function filterDefaultNumberProperties(searchObject: MediaScanTypes.Defau
 
 /** Filter the set based on string properties */
 // export function filterByNumber(set: Set<TPN>, propertiesMap: Map<string, numberExpressionObject>) : Set<TPN>
-export function filterByNumber(set: Set<MediaScanTypes.TPN>, propertiesMap: Map<string, MediaScanTypes.NumberExpressionObject>): Set<MediaScanTypes.TPN> {
+export function filterByNumber(set: Set<MediaScanTypes.TPN>,
+                               propertiesMap: Map<string, MediaScanTypes.NumberExpressionObject>)
+: Set<MediaScanTypes.TPN> {
     // first step : get an array so that we can do filter/reduce stuff
     // second step : iterate the propertiesMap and do filter and return the filtered array
     // val[0] : the key ; val[1] : the value
@@ -60,18 +64,19 @@ export function filterByNumber(set: Set<MediaScanTypes.TPN>, propertiesMap: Map<
         .from(propertiesMap.entries())
         .reduce(
             // eslint-disable-next-line max-len
-            (currentMoviesArray, val) => currentMoviesArray.filter(TPN => resolveExpression(val[0], val[1], TPN))
+            (currentMoviesArray, val) => currentMoviesArray.filter((TPN) => resolveExpression(val[0], val[1], TPN))
             , [...set],
         ));
 }
 
 // Just for type check this type
 export function meetNumberSpec(value) {
-    if (typeof value === 'number')
+    if (typeof value === "number") {
         return true;
-    else
-        if (typeof value !== 'string')
+    } else
+        if (typeof value !== "string") {
             return false;
-        else
+        } else {
             return validExpression.test(value as string);
+        }
 }
