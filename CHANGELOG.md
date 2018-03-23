@@ -1,3 +1,15 @@
+<a name="1.2.3"></a>
+## [1.2.3](https://github.com/jy95/mediaScan/compare/v1.2.2...v1.2.3) (2018-03-23)
+
+
+### Refactor
+
+* Rewrite default parser integration ([6965bd15b6be2596ab0357cbeabbd4b336d8b010](https://github.com/jy95/mediaScan/commit/6965bd15b6be2596ab0357cbeabbd4b336d8b010))
+
+### Style
+
+* Follows Tslint code conventions ([43dae497e40a27581b59076c57b2caf4d0b67261](https://github.com/jy95/mediaScan/commit/43dae497e40a27581b59076c57b2caf4d0b67261))
+
 <a name="1.2.2"></a>
 ## [1.2.2](https://github.com/jy95/mediaScan/compare/v1.2.1...v1.2.2) (2018-03-21)
 
