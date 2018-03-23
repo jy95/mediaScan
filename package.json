@@ -12,6 +12,7 @@
     "prepare": "npm run compile",
     "clean": "jest --clearCache",
     "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
+    "lint": "tslint -c tslint.json -p tsconfig.json --project . --fix",
     "type-check": "tsc"
   },
   "engines": {
@@ -62,6 +63,7 @@
     "jest": "^22.4.2",
     "semantic-release": "^15.1.2",
     "ts-jest": "^22.4.2",
+    "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   },
   "greenkeeper": {

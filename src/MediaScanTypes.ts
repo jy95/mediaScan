@@ -28,21 +28,17 @@ export interface TPN_Extended extends TPN {
 
 // A parsing function to be used with this lib
 // fullPathFile is the full path to the file - useful if you want to extrapolate things
-export interface ParseFunction {
-    (fullPathFile: string): TPN | TPN_Extended;
-}
+export type ParseFunction = (fullPathFile: string) => TPN | TPN_Extended;
 
 // the media files categories
 // const enum
 export enum Category {
-    MOVIES_TYPE = 'MOVIES',
-    TV_SERIES_TYPE = 'TV_SERIES'
+    MOVIES_TYPE = "MOVIES",
+    TV_SERIES_TYPE = "TV_SERIES",
 }
 
 // which category is this file
-export interface WhichCategoryFunction {
-    (object: TPN): Category
-}
+export type WhichCategoryFunction = (object: TPN) => Category;
 
 // The sub way to store all kind of media files found in paths
 export type MappedType<T> = Map<string, Set<T>>;
@@ -53,48 +49,48 @@ export type NumberSearchSyntax = string;
 
 // to handle number operations
 export interface NumberExpressionObject {
-    operator: "==" | ">" | "<" | ">=" | "<=",
-    number: number
+    operator: "==" | ">" | "<" | ">=" | "<=";
+    number: number;
 }
 // const enum
 export enum AdditionalPropertiesType {
-    STRING = 'string',
-    NUMBER = 'number',
-    BOOLEAN = 'boolean'
+    STRING = "string",
+    NUMBER = "number",
+    BOOLEAN = "boolean",
 }
 
 // additional Properties
 export interface AdditionalProperties {
-    type: AdditionalPropertiesType,
-    name: string,
-    value: boolean | string | string[] | number | NumberSearchSyntax
+    type: AdditionalPropertiesType;
+    name: string;
+    value: boolean | string | string[] | number | NumberSearchSyntax;
 }
 
 export interface MinimalSearchParameters {
-    additionalProperties?: AdditionalProperties[]
+    additionalProperties?: AdditionalProperties[];
 }
 
 export interface DefaultSearchParameters extends MinimalSearchParameters {
-    extended?: boolean,
-    unrated?: boolean,
-    proper?: boolean,
-    repack?: boolean,
-    convert?: boolean,
-    hardcoded?: boolean,
-    retail?: boolean,
-    remastered?: boolean,
-    season?: number | NumberSearchSyntax,
-    episode?: number | NumberSearchSyntax,
-    year?: number | NumberSearchSyntax,
-    title?: string | string[],
-    resolution?: string | string[],
-    codec?: string | string[],
-    audio?: string | string[],
-    group?: string | string[],
-    region?: string | string[],
-    container?: string | string[],
-    language?: string | string[],
-    source?: string | string[],
+    extended?: boolean;
+    unrated?: boolean;
+    proper?: boolean;
+    repack?: boolean;
+    convert?: boolean;
+    hardcoded?: boolean;
+    retail?: boolean;
+    remastered?: boolean;
+    season?: number | NumberSearchSyntax;
+    episode?: number | NumberSearchSyntax;
+    year?: number | NumberSearchSyntax;
+    title?: string | string[];
+    resolution?: string | string[];
+    codec?: string | string[];
+    audio?: string | string[];
+    group?: string | string[];
+    region?: string | string[];
+    container?: string | string[];
+    language?: string | string[];
+    source?: string | string[];
 }
 
 // search parameters for filter functions
@@ -112,23 +108,23 @@ export type mappingStringAndTPNArray = [string, TPN[]];
 
 // json result to be used in createFromJSON
 export interface LibAsJson {
-    allFilesWithCategory?: mappingStringAndCategory[],
-    movies?: TPN[],
-    series?: mappingStringAndTPNArray[],
-    paths?: string[]
+    allFilesWithCategory?: mappingStringAndCategory[];
+    movies?: TPN[];
+    series?: mappingStringAndTPNArray[];
+    paths?: string[];
 }
 
 // the data parameters for constructor (aka first argument)
 export interface DataParameters {
-    defaultPath?: string, // Default path , if paths is empty
-    paths?: string[], // all the paths that will be explored
-    allFilesWithCategory?: Map<string, Category>, // the mapping between file and Category
-    movies?: Set<TPN | TPN_Extended>, // all the movies
-    series?: Map<string, Set<TPN | TPN_Extended>>
+    defaultPath?: string; // Default path , if paths is empty
+    paths?: string[]; // all the paths that will be explored
+    allFilesWithCategory?: Map<string, Category>; // the mapping between file and Category
+    movies?: Set<TPN | TPN_Extended>; // all the movies
+    series?: Map<string, Set<TPN | TPN_Extended>>;
 }
 
 // the custom functions (in order to have a different behaviour) for constructor (aka second argument)
 export interface CustomFunctionsConfig {
-    parser?: ParseFunction,
-    whichCategory?: WhichCategoryFunction
+    parser?: ParseFunction;
+    whichCategory?: WhichCategoryFunction;
 }
