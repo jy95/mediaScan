@@ -1,25 +1,25 @@
 // mock from jest
-'use strict';
-jest.mock('fs');
-jest.mock('filehound');
+"use strict";
+jest.mock("fs");
+jest.mock("filehound");
 
 // imports
-const basename = require('path').basename;
-import {folders, files, MediaScan} from '../__helpers__/_constants';
-import {parse as nameParser} from 'parse-torrent-title';
+const basename = require("path").basename;
+import {parse as nameParser} from "parse-torrent-title";
+import {files, folders, MediaScan} from "../__helpers__/_constants";
 
-describe('allTvSeries', () => {
+describe("allTvSeries", () => {
 
     beforeAll(() => {
         // Set up some mocked out file info before each test
-        require('fs').__setMockPaths(folders);
-        require('filehound').__setResult(files);
+        require("fs").__setMockPaths(folders);
+        require("filehound").__setResult(files);
     });
 
 // TESTS
     /** @test {TorrentLibrary#allTvSeries} */
-    test('Returns the tv-shows', async () => {
-        let libInstance = new MediaScan();
+    test("Returns the tv-shows", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan().resolves);
         expect(libInstance.allTvSeries).toEqual(
@@ -34,7 +34,7 @@ describe('allTvSeries', () => {
                         {filePath: files[1]},
                     ),
                 ])],
-            ])
+            ]),
         );
     });
 

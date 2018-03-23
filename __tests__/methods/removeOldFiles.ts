@@ -1,30 +1,30 @@
 // mock from jest
-'use strict';
-jest.mock('fs');
-jest.mock('filehound');
+"use strict";
+jest.mock("fs");
+jest.mock("filehound");
 
 // imports
-import * as path from 'path';
-import {parse as nameParser} from 'parse-torrent-title';
-import {files, folders, MediaScan} from '../__helpers__/_constants';
+import {parse as nameParser} from "parse-torrent-title";
+import * as path from "path";
 import {basename} from "path";
+import {files, folders, MediaScan} from "../__helpers__/_constants";
 
-describe('removeOldFiles', () => {
+describe("removeOldFiles", () => {
 
     beforeAll(() => {
         // Set up some mocked out file info before each test
-        require('fs').__setMockPaths(folders);
-        require('filehound').__setResult(files);
+        require("fs").__setMockPaths(folders);
+        require("filehound").__setResult(files);
     });
 
     /** @test {MediaScan#removeOldFiles} */
-    test('Should not be able to remove not present files', async () => {
-        let libInstance = new MediaScan();
+    test("Should not be able to remove not present files", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan()).resolves;
         const wrongFile = path.join(
-            __dirname, 'folder1',
-            'The.Blacklist.S04E22.FRENCH.WEBRip.XviD.avi',
+            __dirname, "folder1",
+            "The.Blacklist.S04E22.FRENCH.WEBRip.XviD.avi",
         );
         const allFiles = libInstance.allFilesWithCategory;
         const expectedTvSeriesMap = libInstance.allTvSeries;
@@ -34,15 +34,15 @@ describe('removeOldFiles', () => {
     });
 
     /** @test {MediaScan#removeOldFiles} */
-    test('Should be able to remove a movie', async () => {
-        let libInstance = new MediaScan();
+    test("Should be able to remove a movie", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan()).resolves;
         const allFilesWithoutMovie = libInstance.allFilesWithCategory;
         // files[2] ; Bad Ass
         allFilesWithoutMovie.delete(files[2]);
 
-        const eventSpy = jest.spyOn(libInstance, 'removeOldFiles');
+        const eventSpy = jest.spyOn(libInstance, "removeOldFiles");
         // files[2] ; Bad Ass
         await expect(libInstance.removeOldFiles(files[2])).resolves;
         expect(libInstance.allMovies).toEqual(new Set());
@@ -53,15 +53,15 @@ describe('removeOldFiles', () => {
     });
 
     /** @test {MediaScan#removeOldFiles} */
-    test('Should be able to remove an tv-serie episode', async () => {
-        let libInstance = new MediaScan();
+    test("Should be able to remove an tv-serie episode", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan()).resolves;
         const allFilesWithoutIt = libInstance.allFilesWithCategory;
         // files[1] ; The.Blacklist.S04E21
         allFilesWithoutIt.delete(files[1]);
 
-        const eventSpy = jest.spyOn(libInstance, 'removeOldFiles');
+        const eventSpy = jest.spyOn(libInstance, "removeOldFiles");
         // files[1] ; The.Blacklist.S04E21
         await expect(libInstance.removeOldFiles(files[1])).resolves;
         expect(libInstance.allTvSeries).toEqual(new Map([
@@ -79,13 +79,13 @@ describe('removeOldFiles', () => {
     });
 
     /** @test {MediaScan#removeOldFiles} */
-    test('Should be able to remove multiples files : Tv-serie', async () => {
-        let libInstance = new MediaScan();
+    test("Should be able to remove multiples files : Tv-serie", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan()).resolves;
         const allFilesWithoutIt = new Map([[files[2], MediaScan.MOVIES_TYPE]]);
 
-        const eventSpy = jest.spyOn(libInstance, 'removeOldFiles');
+        const eventSpy = jest.spyOn(libInstance, "removeOldFiles");
         await expect(libInstance.removeOldFiles(...files.slice(0, 2))).resolves;
         expect(libInstance.allTvSeries).toEqual(new Map());
 
@@ -96,23 +96,20 @@ describe('removeOldFiles', () => {
 
 // test to handle default parameters
     /** @test {MediaScan#removeOldFiles} */
-    test('Should not be able to remove files : wrong custom parser', async () => {
-        let libInstance = MediaScan.createFromJSON({
-            paths: [
-                ...folders,
-            ],
+    test("Should not be able to remove files : wrong custom parser", async () => {
+        const libInstance = MediaScan.createFromJSON({
             allFilesWithCategory: [
                 [
                     files[2],
-                    'MOVIES',
+                    "MOVIES",
                 ],
                 [
                     files[0],
-                    'TV_SERIES',
+                    "TV_SERIES",
                 ],
                 [
                     files[1],
-                    'TV_SERIES',
+                    "TV_SERIES",
                 ],
             ],
             movies: [
@@ -120,9 +117,12 @@ describe('removeOldFiles', () => {
                     filePath: files[2],
                 }),
             ],
+            paths: [
+                ...folders,
+            ],
             series: [
                 [
-                    'The Blacklist',
+                    "The Blacklist",
                     [
                         Object.assign(nameParser(basename(files[0])), {
                             filePath: files[0],
@@ -134,9 +134,9 @@ describe('removeOldFiles', () => {
                 ],
             ],
         }, {
-            parser : {}
+            parser : {},
         });
-        const eventSpy = jest.spyOn(libInstance, 'removeOldFiles');
+        const eventSpy = jest.spyOn(libInstance, "removeOldFiles");
         await expect(libInstance.removeOldFiles(...files)).rejects.toThrowError();
         expect(eventSpy).toHaveBeenCalled();
         expect(eventSpy).toHaveBeenCalledTimes(1);

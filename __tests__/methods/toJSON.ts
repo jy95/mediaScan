@@ -1,37 +1,36 @@
 // mock from jest
-'use strict';
-jest.mock('fs');
-jest.mock('filehound');
+"use strict";
+jest.mock("fs");
+jest.mock("filehound");
 
 // imports
-import {basename} from 'path';
-import {parse as nameParser} from 'parse-torrent-title';
-import {files, folders, MediaScan} from '../__helpers__/_constants';
+import {parse as nameParser} from "parse-torrent-title";
+import {basename} from "path";
+import {files, folders, MediaScan} from "../__helpers__/_constants";
 
-describe('toJSON', () => {
+describe("toJSON", () => {
 
     beforeAll(() => {
         // Set up some mocked out file info before each test
-        require('fs').__setMockPaths(folders);
-        require('filehound').__setResult(files);
+        require("fs").__setMockPaths(folders);
+        require("filehound").__setResult(files);
     });
 
     /** @test {MediaScan#toJSON} */
-    test('return a valid stringified JSON', async () => {
+    test("return a valid stringified JSON", async () => {
         const expectedJson = {
-            paths: folders,
             allFilesWithCategory: [
                 [
                     files[0],
-                    'TV_SERIES',
+                    "TV_SERIES",
                 ],
                 [
                     files[1],
-                    'TV_SERIES',
+                    "TV_SERIES",
                 ],
                 [
                     files[2],
-                    'MOVIES',
+                    "MOVIES",
                 ],
             ],
             movies: [
@@ -39,9 +38,10 @@ describe('toJSON', () => {
                     filePath: files[2],
                 }),
             ],
+            paths: folders,
             series: [
                 [
-                    'The Blacklist',
+                    "The Blacklist",
                     [
                         Object.assign(nameParser(basename(files[0])), {
                             filePath: files[0],
@@ -53,7 +53,7 @@ describe('toJSON', () => {
                 ],
             ],
         };
-        let libInstance = new MediaScan();
+        const libInstance = new MediaScan();
         const data = await libInstance.addNewPath(...folders);
         await expect(data).resolves;
         const scan = await libInstance.scan();
