@@ -1,21 +1,21 @@
 // mock from jest
-'use strict';
-jest.mock('fs');
-jest.mock('filehound');
+"use strict";
+jest.mock("fs");
+jest.mock("filehound");
 
 // imports
-import {files, folders, MediaScan} from '../__helpers__/_constants';
+import {files, folders, MediaScan} from "../__helpers__/_constants";
 
-describe('createFromJSON', ()=>{
+describe("createFromJSON", () => {
     beforeAll(() => {
         // Set up some mocked out file info before each test
-        require('fs').__setMockPaths(folders);
-        require('filehound').__setResult(files);
+        require("fs").__setMockPaths(folders);
+        require("filehound").__setResult(files);
     });
 
     /** @test {MediaScan.createFromJSON} */
-    test('create a perfect copy of instance', async () => {
-        let libInstance = new MediaScan();
+    test("create a perfect copy of instance", async () => {
+        const libInstance = new MediaScan();
         await expect(libInstance.addNewPath(...folders)).resolves;
         await expect(libInstance.scan()).resolves;
         const jsonFromLib = JSON.parse(libInstance.toJSON());
@@ -27,8 +27,7 @@ describe('createFromJSON', ()=>{
 
 // dummy test for ES6 code coverage
     /** @test {MediaScan.createFromJSON} */
-    test('empty instance(s)', async () => {
+    test("empty instance(s)", async () => {
         expect(MediaScan.createFromJSON({}, {})).toBeInstanceOf(MediaScan);
     });
 });
-
