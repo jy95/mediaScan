@@ -7,7 +7,7 @@
     "downlevelIteration": true,
     "moduleResolution": "node",
     "declaration": true,
-    "emitDeclarationsOnly": true,
+    "emitDeclarationOnly": true,
     "declarationDir": "./lib"
   },
   "exclude": [
