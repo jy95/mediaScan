@@ -4,12 +4,11 @@
     "module": "commonjs",
     "target": "es5",
     "lib": ["ES6","ES2017","ESNext"],
-    "sourceMap": true,
+    "downlevelIteration": true,
     "moduleResolution": "node",
-    "declarationDir": "./lib",
     "declaration": true,
     "emitDeclarationsOnly": true,
-    "downlevelIteration": true
+    "declarationDir": "./lib"
   },
   "exclude": [
     "node_modules"
