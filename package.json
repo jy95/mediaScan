@@ -1,17 +1,17 @@
 {
   "name": "mediascan",
   "version": "1.2.0",
-  "description": "A scanner for media files that follows a user-provided naming convention",
+  "description":
+    "A scanner for media files that follows a user-provided naming convention",
   "main": "index.js",
-  "files": [
-    "lib/"
-  ],
+  "files": ["lib/"],
   "scripts": {
     "test": "jest",
     "semantic-release": "semantic-release -e ./config/release.config.js",
     "prepare": "npm run compile",
     "clean": "jest --clearCache",
-    "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
+    "compile":
+      "babel src --out-dir lib --extensions \".ts\" --source-maps both",
     "lint": "tslint -c tslint.json -p tsconfig.json --project . --fix",
     "type-check": "tsc"
   },
@@ -71,8 +71,10 @@
       "initialBadge": ":memo: Docs: Add Greenkeeper badge",
       "initialDependencies": ":gem: Upgrade: Update dependencies",
       "initialBranches": ":tada: Build: Whitelist greenkeeper branches",
-      "dependencyUpdate": ":gem: Upgrade: Update ${dependency} to version ${version}",
-      "devDependencyUpdate": ":gem: Upgrade: Update ${dependency} to version ${version}",
+      "dependencyUpdate":
+        ":gem: Upgrade: Update ${dependency} to version ${version}",
+      "devDependencyUpdate":
+        ":gem: Upgrade: Update ${dependency} to version ${version}",
       "dependencyPin": ":bug: Fix: Pin ${dependency} to ${oldVersion}",
       "devDependencyPin": ":bug: Fix: Pin ${dependency} to ${oldVersion}"
     }
