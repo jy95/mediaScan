@@ -2,6 +2,16 @@ import * as MediaScanTypes from "../MediaScanTypes";
 import { filterDefaultProperties } from "../utils/utils_functions";
 
 const validExpression = /^(==|>|<|>=|<=)(\d+)$/;
+
+// operator functions
+const ops = {
+  ">": (a, b) => a > b,
+  ">=": (a, b) => a >= b,
+  "==": (a, b) => a == b,
+  "<": (a, b) => a < b,
+  "<=": (a, b) => a <= b
+};
+
 /**
  * Convert the param to valid expression object for filter function
  */
@@ -43,10 +53,9 @@ function resolveExpression(
   expressionObject: MediaScanTypes.NumberExpressionObject,
   object: MediaScanTypes.TPN | MediaScanTypes.TPN_Extended
 ): boolean {
-  // No : eval is not all evil but you should know what you are doing
-  // eslint-disable-next-line no-eval
-  return eval(
-    `${object[property]}${expressionObject.operator}${expressionObject.number}`
+  return ops[expressionObject.operator](
+    object[property],
+    expressionObject.number
   );
 }
 
