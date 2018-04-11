@@ -1,3 +1,32 @@
+<a name="1.2.4"></a>
+## [1.2.4](https://github.com/jy95/mediaScan/compare/v1.2.3...v1.2.4) (2018-04-11)
+
+
+### Docs
+
+* declaration only for ts files ([0183ce58749fe6a1f32b1a7730306e4994f56a3e](https://github.com/jy95/mediaScan/commit/0183ce58749fe6a1f32b1a7730306e4994f56a3e))
+* Fix typo in tsconfig ([0ca2e1fe077d3491bd3289b0532d2213971d78e3](https://github.com/jy95/mediaScan/commit/0ca2e1fe077d3491bd3289b0532d2213971d78e3))
+
+### Perf
+
+* Replace eval by object function ([f1a30bbf6cd20fe0c0b850d818aa3337f12f9eaf](https://github.com/jy95/mediaScan/commit/f1a30bbf6cd20fe0c0b850d818aa3337f12f9eaf))
+
+### Style
+
+* Follows tslint code conventions - unit tests ([013286eb01b9997028f97d13367da1a85ba6f2e9](https://github.com/jy95/mediaScan/commit/013286eb01b9997028f97d13367da1a85ba6f2e9))
+* Prettier all sources code ([e9b508e406e16e71e6409e829a33a1615acf6633](https://github.com/jy95/mediaScan/commit/e9b508e406e16e71e6409e829a33a1615acf6633))
+* Tslint fix errors ([802b823de097a219e1aa4fc3c47144cb22f2f072](https://github.com/jy95/mediaScan/commit/802b823de097a219e1aa4fc3c47144cb22f2f072))
+
+### Test
+
+* Fix lost coverage (because of jest issue) ([90bd75ceefaadc2a71217974bb199ad98fbba551](https://github.com/jy95/mediaScan/commit/90bd75ceefaadc2a71217974bb199ad98fbba551))
+* Fix ts-jest mix up with Ts config ([3a9cebd51ea05a047e19c27452052304284c5ce3](https://github.com/jy95/mediaScan/commit/3a9cebd51ea05a047e19c27452052304284c5ce3))
+
+### Upgrade
+
+* Update Babel to beta 44 ([2e4e16c14960eb65fc99a82afc41e07e2768d2fa](https://github.com/jy95/mediaScan/commit/2e4e16c14960eb65fc99a82afc41e07e2768d2fa))
+* Update dependancies ([45e3835025dfdeebb18220ccc948687e84913046](https://github.com/jy95/mediaScan/commit/45e3835025dfdeebb18220ccc948687e84913046))
+
 <a name="1.2.3"></a>
 ## [1.2.3](https://github.com/jy95/mediaScan/compare/v1.2.2...v1.2.3) (2018-03-23)
 
