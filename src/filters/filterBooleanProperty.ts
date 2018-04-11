@@ -3,7 +3,7 @@ import * as MediaScanTypes from "../MediaScanTypes";
 import { filterDefaultProperties } from "../utils/utils_functions";
 
 export function filterDefaultBooleanProperties(
-  searchObject: MediaScanTypes.DefaultSearchParameters
+  searchObject: MediaScanTypes.DefaultSearchParameters,
 ): Array<MediaScanTypes.filterTuple<boolean>> {
   const propertiesNames = [
     "extended",
@@ -13,22 +13,22 @@ export function filterDefaultBooleanProperties(
     "convert",
     "hardcoded",
     "retail",
-    "remastered"
+    "remastered",
   ];
   return filterDefaultProperties<boolean>(
     propertiesNames,
     searchObject,
-    value => {
+    (value) => {
       return meetBooleanSpec(value);
     },
-    (key, value) => [key, value]
+    (key, value) => [key, value],
   );
 }
 
 /** Filter the set based on boolean properties */
 export function filterByBoolean(
   set: Set<MediaScanTypes.TPN>,
-  propertiesMap: Map<string, boolean>
+  propertiesMap: Map<string, boolean>,
 ): Set<MediaScanTypes.TPN> {
   // first step : get an array so that we can do filter/reduce stuff
   // second step : iterate the propertiesMap and do filter and return the filtered array
@@ -37,9 +37,9 @@ export function filterByBoolean(
     Array.from(propertiesMap.entries()).reduce(
       // eslint-disable-next-line max-len
       (currentMoviesArray, val) =>
-        currentMoviesArray.filter(TPN => TPN[val[0]] === val[1]),
-      [...set]
-    )
+        currentMoviesArray.filter((TPN) => TPN[val[0]] === val[1]),
+      [...set],
+    ),
   );
 }
 

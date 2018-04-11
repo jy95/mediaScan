@@ -7,7 +7,7 @@ import { compose, filter as filterFP, pluck } from "lodash/fp";
 import {
   filterByBoolean,
   filterDefaultBooleanProperties,
-  meetBooleanSpec
+  meetBooleanSpec,
 } from "./filterBooleanProperty";
 
 /**
@@ -17,7 +17,7 @@ import {
   convertToValidExpression,
   filterByNumber,
   filterDefaultNumberProperties,
-  meetNumberSpec
+  meetNumberSpec,
 } from "./filterNumberProperty";
 
 /**
@@ -27,11 +27,11 @@ import * as MediaScanTypes from "../MediaScanTypes";
 import {
   filterByString,
   filterDefaultStringProperties,
-  meetStringSpec
+  meetStringSpec,
 } from "./filterStringProperty";
 
 function mapProperties(
-  searchParameters: MediaScanTypes.SearchParameters
+  searchParameters: MediaScanTypes.SearchParameters,
 ): {
   booleanFieldsSearchMap: Map<string, boolean>;
   numberFieldsSearchMap: Map<string, MediaScanTypes.NumberExpressionObject>;
@@ -43,16 +43,16 @@ function mapProperties(
     searchParameters.additionalProperties === undefined
       ? []
       : searchParameters.additionalProperties;
-  const filterAdditionalProperties = type => newProperty =>
+  const filterAdditionalProperties = (type) => (newProperty) =>
     newProperty.type === type;
   const booleanFieldsSearchArray = filterDefaultBooleanProperties(
-    searchParameters
+    searchParameters,
   );
   const numberFieldsSearchArray = filterDefaultNumberProperties(
-    searchParameters
+    searchParameters,
   );
   const stringFieldsSearchArray = filterDefaultStringProperties(
-    searchParameters
+    searchParameters,
   );
 
   // add additional Properties into the proper array
@@ -63,10 +63,10 @@ function mapProperties(
       filterFP(({ value }) => meetBooleanSpec(value)),
       filterFP(
         filterAdditionalProperties(
-          MediaScanTypes.AdditionalPropertiesType.BOOLEAN
-        )
-      )
-    )(additionalProperties)
+          MediaScanTypes.AdditionalPropertiesType.BOOLEAN,
+        ),
+      ),
+    )(additionalProperties),
   );
 
   Array.prototype.push.apply(
@@ -74,15 +74,15 @@ function mapProperties(
     compose(
       pluck(({ name, value }) => [
         name,
-        convertToValidExpression(value as number | string)
+        convertToValidExpression(value as number | string),
       ]),
       filterFP(({ value }) => meetNumberSpec(value)),
       filterFP(
         filterAdditionalProperties(
-          MediaScanTypes.AdditionalPropertiesType.NUMBER
-        )
-      )
-    )(additionalProperties)
+          MediaScanTypes.AdditionalPropertiesType.NUMBER,
+        ),
+      ),
+    )(additionalProperties),
   );
 
   Array.prototype.push.apply(
@@ -92,10 +92,10 @@ function mapProperties(
       filterFP(({ value }) => meetStringSpec(value)),
       filterFP(
         filterAdditionalProperties(
-          MediaScanTypes.AdditionalPropertiesType.STRING
-        )
-      )
-    )(additionalProperties)
+          MediaScanTypes.AdditionalPropertiesType.STRING,
+        ),
+      ),
+    )(additionalProperties),
   );
 
   return {
@@ -105,15 +105,15 @@ function mapProperties(
       MediaScanTypes.NumberExpressionObject
     >(numberFieldsSearchArray),
     stringFieldsSearchMap: new Map<string, string | string[]>(
-      stringFieldsSearchArray
-    )
+      stringFieldsSearchArray,
+    ),
   };
 }
 
 /** Filter the movies based on search parameters */
 export function filterMoviesByProperties(
   searchParameters: MediaScanTypes.SearchParameters,
-  allMovies: Set<MediaScanTypes.TPN>
+  allMovies: Set<MediaScanTypes.TPN>,
 ): Set<MediaScanTypes.TPN> {
   // Check if empty - for faster result
   if (isEmpty(searchParameters)) {
@@ -123,12 +123,12 @@ export function filterMoviesByProperties(
   const {
     booleanFieldsSearchMap,
     stringFieldsSearchMap,
-    numberFieldsSearchMap
+    numberFieldsSearchMap,
   } = mapProperties(searchParameters);
   const filterStuff: MediaScanTypes.filterFunctionTuple[] = [
     [filterByBoolean, booleanFieldsSearchMap],
     [filterByString, stringFieldsSearchMap],
-    [filterByNumber, numberFieldsSearchMap]
+    [filterByNumber, numberFieldsSearchMap],
   ];
 
   return filterStuff.reduce(
@@ -137,14 +137,14 @@ export function filterMoviesByProperties(
         ? filterFunction(processingResult, propertiesMap)
         : processingResult;
     },
-    allMovies
+    allMovies,
   );
 }
 
 /** Filter the tv series based on search parameters */
 export function filterTvSeriesByProperties(
   searchParameters: MediaScanTypes.SearchParameters,
-  allTvSeries: Map<string, Set<MediaScanTypes.TPN>>
+  allTvSeries: Map<string, Set<MediaScanTypes.TPN>>,
 ): Map<string, Set<MediaScanTypes.TPN>> {
   // Check if empty for faster result
   if (isEmpty(searchParameters)) {
@@ -154,12 +154,12 @@ export function filterTvSeriesByProperties(
   const {
     booleanFieldsSearchMap,
     stringFieldsSearchMap,
-    numberFieldsSearchMap
+    numberFieldsSearchMap,
   } = mapProperties(searchParameters);
   const filterStuff: MediaScanTypes.filterFunctionTuple[] = [
     [filterByBoolean, booleanFieldsSearchMap],
     [filterByString, stringFieldsSearchMap],
-    [filterByNumber, numberFieldsSearchMap]
+    [filterByNumber, numberFieldsSearchMap],
   ];
 
   // apply the filters
@@ -172,7 +172,7 @@ export function filterTvSeriesByProperties(
             ? filterFunction(currentFilteredSet, propertiesMap)
             : currentFilteredSet;
         },
-        showSet
+        showSet,
       );
       // add this entry if there is soms episode(s) left
       if (filteredSet.size > 0) {
@@ -180,6 +180,6 @@ export function filterTvSeriesByProperties(
       }
       // reducer call
       return processingArray;
-    }, [])
+    }, []),
   );
 }
