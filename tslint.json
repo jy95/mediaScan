@@ -7,7 +7,7 @@
   "rules": {
     "class-name": false,
     "no-var-requires": false,
-    "no-eval": false,
+    "triple-equals": false,
     "no-bitwise": false,
     "interface-name": [
       "never-prefix"

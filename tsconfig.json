@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "module": "commonjs",
     "target": "es5",
     "lib": ["ES6","ES2017","ESNext"],
-    "sourceMap": true,
-    "outDir": "./lib",
-    "declaration": true,
+    "downlevelIteration": true,
     "moduleResolution": "node",
-    "downlevelIteration": true
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./lib"
   },
   "exclude": [
     "node_modules"
