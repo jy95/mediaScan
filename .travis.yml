@@ -11,8 +11,8 @@ notifications:
       on_failure: always
 node_js:
   - 'node'
-  - '7'
-  - '6'
+  - '10'
+  - '8'
 os:
   - linux
 before_install:
