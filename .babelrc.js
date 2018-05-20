@@ -5,7 +5,7 @@ var presets = [
             "keepClassName": true
         }
     }],
-    ["@babel/env", { loose: true, "targets": { "node": 6 } } ],
+    ["@babel/env", { loose: true, "targets": { "node": 8 } } ],
     "@babel/preset-typescript"
 ];
 var plugins = [
