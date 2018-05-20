@@ -16,7 +16,7 @@
     "type-check": "tsc"
   },
   "engines": {
-    "node": ">=6",
+    "node": ">=8",
     "npm": ">=5"
   },
   "keywords": [
