@@ -1,3 +1,21 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/jy95/mediaScan/compare/v1.2.4...v2.0.0) (2018-05-20)
+
+
+### Breaking
+
+* Drop Support for Node 6 (EOL) ([ef84bc3b0e86684f09df7abdb37ec6af578bdb0c](https://github.com/jy95/mediaScan/commit/ef84bc3b0e86684f09df7abdb37ec6af578bdb0c))
+
+### Chore
+
+* Fix typo ([8c652c0317a8de3ee13d5b31a9972086bb38251d](https://github.com/jy95/mediaScan/commit/8c652c0317a8de3ee13d5b31a9972086bb38251d))
+
+### Upgrade
+
+* Babel beta 46 ([7453218893063930a85eb531e381ad7c4bc24c7f](https://github.com/jy95/mediaScan/commit/7453218893063930a85eb531e381ad7c4bc24c7f))
+* Lockfile ([b5bceeb7aedac1836729e9aa9cb9446bc75a9d88](https://github.com/jy95/mediaScan/commit/b5bceeb7aedac1836729e9aa9cb9446bc75a9d88))
+* Semantic-release ([25fe356638a50b5345e8940fe2c5b403df49d004](https://github.com/jy95/mediaScan/commit/25fe356638a50b5345e8940fe2c5b403df49d004))
+
 <a name="1.2.4"></a>
 ## [1.2.4](https://github.com/jy95/mediaScan/compare/v1.2.3...v1.2.4) (2018-04-11)
 
