@@ -18,15 +18,20 @@ os:
 before_install:
   - npm install -g codecov
   - npm i -g travis-deploy-once
+  - npm install -g greenkeeper-lockfile@latest
 install:
   - npm i -g npm@latest
-  - npm ci
+  - npm install
 before_script:
   - npm prune
   - echo "Check if TypeScript files have valid syntax/types"
   - npm run type-check
   - echo "Check if TypeScript files have valid linting"
   - npm run lint
+  - echo "GreenKeeper lockfile update"
+  - greenkeeper-lockfile-update
+after_script:
+  - greenkeeper-lockfile-upload
 after_success:
   - codecov
   - travis-deploy-once && npx -p node@8 npm run semantic-release
