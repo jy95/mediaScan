@@ -21,7 +21,7 @@ before_install:
   - npm install -g greenkeeper-lockfile@latest
 install:
   - npm i -g npm@latest
-  - npm ci
+  - npm install
 before_script:
   - npm prune
   - echo "Check if TypeScript files have valid syntax/types"
