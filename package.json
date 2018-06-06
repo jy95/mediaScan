@@ -59,7 +59,7 @@
     "@types/jest": "^23.0.0",
     "@types/node": "^10.1.2",
     "babel-minify": "^0.4.0",
-    "conventional-changelog-eslint": "^2.0.0",
+    "conventional-changelog-eslint": "^3.0.0",
     "jest": "^22.4.3",
     "semantic-release": "^15.4.2",
     "ts-jest": "^22.4.6",
