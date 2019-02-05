@@ -44,10 +44,10 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "filehound": "^1.16.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "parse-torrent-title": "^1.2.0",
     "video-extensions": "^1.1.0",
-    "snyk": "^1.123.0"
+    "snyk": "^1.124.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.47",
