@@ -47,7 +47,7 @@
     "lodash": "^4.17.12",
     "parse-torrent-title": "^1.2.0",
     "video-extensions": "^1.1.0",
-    "snyk": "^1.198.0"
+    "snyk": "^2.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.47",
