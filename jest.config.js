@@ -16,7 +16,8 @@ module.exports = {
     "collectCoverage": true,
     "globals": {
         "ts-jest": {
-            "tsConfigFile": "tsconfig.jest.json"
+            "tsConfig": "./tsconfig.jest.json",
+            "diagnostics": true
         }
     }
 };

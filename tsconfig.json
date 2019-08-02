@@ -1,20 +1,25 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "module": "commonjs",
-    "target": "es5",
-    "lib": ["ES6","ES2017","ESNext"],
-    "downlevelIteration": true,
-    "moduleResolution": "node",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "./lib"
+  "compilerOptions":{
+    "allowSyntheticDefaultImports":true,
+    "module":"commonjs",
+    "target":"es5",
+    "lib":[
+      "ES6",
+      "ES2017",
+      "ESNext"
+    ],
+    "downlevelIteration":true,
+    "moduleResolution":"node",
+    "declaration":true,
+    "emitDeclarationOnly":true,
+    "declarationDir":"./lib"
   },
-  "exclude": [
+  "exclude":[
     "node_modules"
   ],
-  "include": [
+  "include":[
     "src/**/*"
   ],
-  "strict": true
+  "strict":true,
+  "preset":"ts-jest"
 }
