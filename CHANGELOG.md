@@ -1,3 +1,38 @@
+## [2.0.1](https://github.com/jy95/mediaScan/compare/v2.0.0...v2.0.1) (2019-08-02)
+
+
+### CI
+
+* auto update of lockfile ([a3065977d7cf103502068be9ccb11926396b6aa3](https://github.com/jy95/mediaScan/commit/a3065977d7cf103502068be9ccb11926396b6aa3))
+* auto update of lockfile ([4912e459c461838e1a56cf7a1a1513d23899deeb](https://github.com/jy95/mediaScan/commit/4912e459c461838e1a56cf7a1a1513d23899deeb))
+
+### fix
+
+* .snyk to reduce vulnerabilities ([f3e5e47315e45bcd6c01b7d818e337e255d0a5cc](https://github.com/jy95/mediaScan/commit/f3e5e47315e45bcd6c01b7d818e337e255d0a5cc))
+* .snyk, package.json & package-lock.json to reduce vulnerabilities ([42390ff4a13020408922aaf429ba8d9fae61b2a4](https://github.com/jy95/mediaScan/commit/42390ff4a13020408922aaf429ba8d9fae61b2a4))
+* .snyk, package.json & package-lock.json to reduce vulnerabilities ([689062ec471b5a0991498bc929f47e33639b13cb](https://github.com/jy95/mediaScan/commit/689062ec471b5a0991498bc929f47e33639b13cb))
+* configure Snyk protect to enable patches ([3c245bd370ba78980a35f180f8097939ed004805](https://github.com/jy95/mediaScan/commit/3c245bd370ba78980a35f180f8097939ed004805))
+* package.json & package-lock.json to reduce vulnerabilities ([e8ef8d70d9a52f569e9c296e80ff2111f69e4fd9](https://github.com/jy95/mediaScan/commit/e8ef8d70d9a52f569e9c296e80ff2111f69e4fd9))
+
+### Fix
+
+* typings issues ([1d4282e6a37e140335b5e3b312a0ba5ea66ace00](https://github.com/jy95/mediaScan/commit/1d4282e6a37e140335b5e3b312a0ba5ea66ace00))
+
+### Upgrade
+
+* Update @semantic-release/changelog to version 3.0.0 ([af3ed183246d3379ef891690f56f79eca5a174de](https://github.com/jy95/mediaScan/commit/af3ed183246d3379ef891690f56f79eca5a174de))
+* Update @semantic-release/git to version 6.0.0 ([f8125603b5e9fc9796dd13ce7bf466c33994f652](https://github.com/jy95/mediaScan/commit/f8125603b5e9fc9796dd13ce7bf466c33994f652))
+* Update @semantic-release/git to version 7.0.0 ([eac31ac5449834458a6d439dd83807fffdecdfb4](https://github.com/jy95/mediaScan/commit/eac31ac5449834458a6d439dd83807fffdecdfb4))
+* Update @types/jest to version 24.0.0 ([035ccd7b68148d5cc4bd361da6cfb1501d6ed679](https://github.com/jy95/mediaScan/commit/035ccd7b68148d5cc4bd361da6cfb1501d6ed679))
+* Update @types/node to version 11.9.0 ([73579977d90aec53a547aa014c6f2cdb0459c804](https://github.com/jy95/mediaScan/commit/73579977d90aec53a547aa014c6f2cdb0459c804))
+* Update @types/node to version 12.0.0 ([f7317713109b6390f7cf1c9448de2d0292e7bc22](https://github.com/jy95/mediaScan/commit/f7317713109b6390f7cf1c9448de2d0292e7bc22))
+* Update babel-minify to version 0.5.0 ([922b85d806f936cb38a849887d4ea6841191dda2](https://github.com/jy95/mediaScan/commit/922b85d806f936cb38a849887d4ea6841191dda2))
+* Update snyk to version 1.163.0 ([d859133271de8f42605c8bee4c171ef01e208b2f](https://github.com/jy95/mediaScan/commit/d859133271de8f42605c8bee4c171ef01e208b2f))
+* Update snyk to version 2.0.0 ([5a95ba1e603961c6412b082e8e7d6a9904acba27](https://github.com/jy95/mediaScan/commit/5a95ba1e603961c6412b082e8e7d6a9904acba27))
+* Update ts-jest to version 23.0.0 ([8f1bf4c0da85dac2e698861a0af2b529fb38402f](https://github.com/jy95/mediaScan/commit/8f1bf4c0da85dac2e698861a0af2b529fb38402f))
+* Update ts-jest to version 23.10.1 ([3287411bfd9e8afec131fc4a803d6822b753303c](https://github.com/jy95/mediaScan/commit/3287411bfd9e8afec131fc4a803d6822b753303c))
+* Update ts-jest to version 24.0.0 ([aa7a5dc8cb75dd27f5e0839d6c94d471e3a79cd5](https://github.com/jy95/mediaScan/commit/aa7a5dc8cb75dd27f5e0839d6c94d471e3a79cd5))
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/jy95/mediaScan/compare/v1.2.4...v2.0.0) (2018-05-20)
 
