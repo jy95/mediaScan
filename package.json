@@ -41,7 +41,7 @@
     "url": "https://github.com/jy95/mediaScan.git"
   },
   "dependencies": {
-    "bluebird": "^3.5.1",
+    "bluebird": "^3.7.0",
     "filehound": "^1.16.2",
     "lodash": "^4.17.12",
     "parse-torrent-title": "^1.2.0",
