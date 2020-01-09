@@ -61,7 +61,7 @@
     "babel-minify": "^0.5.0",
     "conventional-changelog-eslint": "^3.0.0",
     "jest": "^24.8.0",
-    "semantic-release": "^15.13.19",
+    "semantic-release": "^16.0.0",
     "ts-jest": "^24.0.0",
     "tslint": "^5.9.1",
     "typescript": "^3.5.3"
