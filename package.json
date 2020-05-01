@@ -9,11 +9,12 @@
   "scripts": {
     "test": "jest",
     "semantic-release": "semantic-release -e ./config/release.config.js",
-    "prepare": "npm run compile",
+    "prepare": "npm run snyk-protect && npm run compile",
     "clean": "jest --clearCache",
     "compile": "babel src --out-dir lib --extensions \".ts\" --source-maps both",
     "lint": "tslint -c tslint.json -p tsconfig.json --project . --fix",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "snyk-protect": "snyk protect"
   },
   "engines": {
     "node": ">=8",
@@ -45,7 +46,8 @@
     "filehound": "^1.16.2",
     "lodash": "^4.17.15",
     "parse-torrent-title": "^1.2.0",
-    "video-extensions": "^1.1.0"
+    "video-extensions": "^1.1.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.47",
