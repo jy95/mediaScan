@@ -60,7 +60,7 @@
     "@types/node": "^14.0.9",
     "babel-minify": "^0.5.0",
     "conventional-changelog-eslint": "^3.0.0",
-    "jest": "^24.8.0",
+    "jest": "^29.6.1",
     "semantic-release": "^17.0.8",
     "ts-jest": "^26.1.0",
     "tslint": "^5.9.1",
